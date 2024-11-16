@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  # Node.js Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"   # Exponiert den Port 3000 des Containers auf Port 3000 deines Hosts
+    #environment:      # Definiert Umgebungsvariablen für die Verbindung zur PostgreSQL- und MongoDB-Datenbank
+    #  - DATABASE_URL=postgres://user:password@postgres-db:5432/eventdb
+    #  - MONGO_URI=mongodb://mongo-db:27017/event-comments
+    depends_on:       # stellt sciher das die vor Backend-Container gestartet werden
+      - postgres-db
+      - mongo-db
+    #volumes:
+      #- ./backend:/app       # Mountet den gesamten 'backend'-Ordner in den Container
+      #Entkommentiere dies, wenn du die 'dist'-Dateien mounten willst (für Entwicklung)
+      #- ./backend/dist:/app/dist
+    #command: ["npm", "run", "start"]  # Startet die Anwendung, wenn der Container hochfährt
+
+  # PostgreSQL Database
+  postgres-db:
+    image: postgres:15
+    container_name: postgresdb
+    ports:
+      - "5432:5432"
+    environment:        # Definiert Standardwerte für den PostgreSQL-Benutzer, das Passwort und die Datenbank
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: eventdb
+    #volumes:
+    #  - ./datenbank/postgres:/var/lib/postgresql/data   # Persistente Speicherung von PostgreSQL-Daten
+
+  # MongoDB Database
+  mongo-db:
+    image: mongo:6
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    #volumes:
+    #  - ./datenbank/mongo:/data/db   # Persistente Speicherung von MongoDB-Daten
