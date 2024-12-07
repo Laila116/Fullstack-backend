@@ -30,8 +30,8 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: eventdb
-    #volumes:
-    #  - ./datenbank/postgres:/var/lib/postgresql/data   # Persistente Speicherung von PostgreSQL-Daten
+    volumes:
+          - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   # MongoDB Database
   mongo-db:
