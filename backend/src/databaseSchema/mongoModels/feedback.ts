@@ -1,0 +1,40 @@
+import mongoose, { Schema, Document, Model } from 'mongoose';
+
+// Definiere das Event-Interface für Typsicherheit
+export interface IFeedback extends Document {
+    eventID: number;
+    userID: number;
+    feedback: number;
+    comment: string;
+}
+
+const FeedbackSchema: Schema = new Schema(
+    {
+        eventID: { type: Number, required: true },
+        userID: { type: Number, required: true },
+        feedback: {
+            type: Number,
+            required: true,
+            min: 1.0, // Untergrenze
+            max: 5.0, // Obergrenze
+            validate: {
+                validator: (value: number) => {
+                    // Prüft, ob der Wert eine Zahl in Schritten von 0.1 ist
+                    return Number.isInteger(value * 10);
+                },
+                message: (props: { value: number; path: string }) =>
+                    `${props.value} ist kein gültiger Feedback-Wert. Erlaubte Werte sind in 0.1-Schritten zwischen 1.0 und 5.0.`,
+            },
+        },
+        comment: { type: String, required: false },
+    },
+    {
+        timestamps:  {createdAt: true, updatedAt: false },// Nur createdAt wird behalten
+        versionKey: false // __v wird deaktiviert (version eines Dokuments)
+    }
+);
+
+// Exportiere das Feedback-Modell
+const Feedback: Model<IFeedback> = mongoose.model<IFeedback>('Feedback', FeedbackSchema);
+
+export default Feedback;

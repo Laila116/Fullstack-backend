@@ -1,72 +1,85 @@
 import { Request, Response, NextFunction } from 'express';
-import { users } from '../models/user.js';
+import { Users } from '../databaseSchema/postgresModels/user.js';
+import { Address } from '../databaseSchema/postgresModels/address.js';
 
 async function createUser(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-        const { firstname, surname, phone, birthday, email, password, balance } = req.body;
-
-        console.log(firstname, surname, phone, birthday, email, password, balance);
+        const { email, password, firstname, surname, phone, birthday, city, postcode, street, houseNumber } = req.body;
+        console.log(email, password, firstname, surname, phone, birthday, city, postcode, street, houseNumber);
 
         // Validierung der notwendigen Felder
-        if (!firstname || !surname || !password || !balance == null) {
-            //return res.status(400).json({ error: 'Missing required fields' });
+        if (!email || !password || !firstname || !surname || !phone || !birthday || !city || !postcode || !street || ! houseNumber) {
+            res.status(400).json({ error: 'Missing required fields' });
+            return;
         }
 
-        // Nutzer erstellen
-        const newUser = await users.create({
+        // Prüfen, ob die E-Mail bereits existiert
+        const existingUser = await Users.getUserData(email);
+        if (existingUser) {
+            res.status(409).json({ error: 'User already exists' });
+            return;
+        }
+
+        const newUserData = {
+            email,
+            password,
             firstname,
             surname,
-            phone: phone || null,
+            phone,
             birthday,
-            email: email || null,
-            password,
-            balance,
-        });
+            balance: 0.0, // Balance explizit setzen
+        }
+        const newUser = await Users.createUser(newUserData);
 
-        res.status(201).json({ message: 'Nutzer erfolgreich erstellt', user: newUser });
-    } catch (error) {
-        //console.error('Fehler beim Erstellen eines Nutzers:', error.message);
+        const newUserAddress = {
+            useremail: email,
+            city,
+            postcode,
+            street,
+            houseNumber,
+        }
+        const newAddress = await Address.createAddress(newUserAddress);
+
+        res.status(201).json({ message: 'Nutzer erfolgreich erstellt', newUser, newAddress });
+
+    } catch (error:any) {
+        console.error('Fehler beim Erstellen eines Nutzers:', error.message);
+        res.status(404).json({ message: `Nutzer konnte nicht erstellt werden` });
         next(error);
     }
 }
 
 async function deleteUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+    const email = req.query.email as string;
     try {
-        const customerid = req.query.customerid as string;
-
-        // Validierung, ob customerid angegeben wurde
-        if (!customerid) {
-            //return res.status(400).json({ error: 'customerid is required' });
+        if (!email) {
+            res.status(400).json({ error: 'Email is missing' });
+            return;
         }
+        
+        const deleted = await Users.deleteUser(email);
+        console.log(deleted);
 
-        // Nutzer löschen
-        const deleted = await users.destroy({
-            where: { customerid },
-        });
-
-        if (deleted === 0) {
-            //return res.status(404).json({ message: `Nutzer mit customerid ${customerid} nicht gefunden` });
-        }
-
-        res.status(200).json({ message: `Nutzer mit customerid ${customerid} erfolgreich gelöscht` });
-    } catch (error) {
-        //console.error('Fehler beim Löschen eines Nutzers:', error.message);
+        res.status(200).json({ message: `Nutzer mit Email ${email} erfolgreich gelöscht` });
+    } catch (error:any) {
+        console.error('Fehler beim Löschen eines Nutzers:', error.message);
+        res.status(404).json({ message: `Nutzer mit Email ${email} nicht gefunden` });
         next(error);
     }
 }
 
-// Beispiel für die getUserData-Funktion
 async function getUserData(req: Request, res: Response, next: NextFunction): Promise<void> {
+    const email = req.query.email as string;
     try {
-        const customerid = req.query.customerid as string;
-        // Deine Logik zum Abrufen eines Nutzers
-        // Beispiel: const user = await User.findById(userId);
-        console.log(customerid);
-        var test = await users.getUserData(customerid);
-        console.log(test);
-        res.status(200).json(test);
-        // res.status(200).json({ message: `Daten des Nutzers mit ID: ${userId}` });
-    } catch (error) {
+        console.log(email);
+
+        var Userselceted = await Users.getUserData(email);
+        console.log(Userselceted);
+
+        res.status(200).json({ message: `Daten des Nutzers mit Email: ${email}`, Userselceted });
+    } catch (error:any) {
+        console.error('Fehler beim lesen eines Nutzers:', error.message);
+        res.status(404).json({ message: `Nutzer mit Email ${email} nicht gefunden` });
         next(error); // Fehler weiterleiten
     }
 }

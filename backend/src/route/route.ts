@@ -1,5 +1,6 @@
 import express from 'express';
 import {createUser, deleteUser, getUserData} from '../controller/user.js';
+import { createFeedback } from '../controller/feedback.js';
 
 const router = express.Router();
 
@@ -11,5 +12,9 @@ router.delete('/user/deleteUser', deleteUser);
 
 // GET Route zum Abrufen von Nutzerdaten (mit ID)
 router.get('/user/getUserData', getUserData);
+
+
+// POST Route zum Erstellen eines komentars
+router.post('/feedback/createFeedback', createFeedback);
 
 export { router };

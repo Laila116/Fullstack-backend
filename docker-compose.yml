@@ -27,8 +27,8 @@ services:
     ports:
       - "5432:5432"
     environment:        # Definiert Standardwerte für den PostgreSQL-Benutzer, das Passwort und die Datenbank
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: AdminUser
+      POSTGRES_PASSWORD: AdminPassword
       POSTGRES_DB: eventdb
     volumes:
           - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
