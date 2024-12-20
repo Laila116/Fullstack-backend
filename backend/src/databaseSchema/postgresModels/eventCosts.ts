@@ -2,32 +2,37 @@ import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../../databaseConnection/postgres.js';
 
 class EventCosts extends Model {
-    public EventID!: number;
-    public TicketCost!: number;
-  }
+  public eventID!: number;
+  public ticketCost!: number;
+  public eventName!: string; 
+}
 
-  EventCosts.init(
-    {
-      EventID: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        allowNull: false,
-        references: {
-          model: 'Eventdetails',
-          key: 'EventID',
-        },
+EventCosts.init(
+  {
+      eventID: {
+          type: DataTypes.INTEGER,
+          primaryKey: true,
+          allowNull: false,
+          /*references: {
+              model: 'Eventdetails',
+              key: 'eventID',
+          },*/
       },
-      TicketCost: {
-        type: DataTypes.FLOAT,
-        allowNull: false,
+      ticketCost: {
+          type: DataTypes.FLOAT,
+          allowNull: false,
       },
-    },
-    {
+      eventName: {
+          type: DataTypes.STRING,
+          allowNull: false,
+      },
+  },
+  {
       sequelize,
       modelName: 'EventCosts',
-      tableName: 'event_costs',
+      tableName: 'Event_costs',
       timestamps: false,
-    }
-  );
-  
-  export default EventCosts;
+  }
+);
+
+export default EventCosts;

@@ -1,39 +1,41 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../../databaseConnection/postgres.js';
 
+import { Users } from './user.js';
+
 class Transaction extends Model {
-    public TransactionID!: number;
-    public CustomerID!: number;
-    public Amount!: number;
-    public Date!: Date;
-    public Type!: string;
+    public transactionID!: number;
+    public usermail!: number;
+    public amount!: number;
+    public date!: Date;
+    public type!: string;
   }
   
   Transaction.init(
     {
-      TransactionID: {
+      transactionID: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false,
       },
-      CustomerID: {
-        type: DataTypes.INTEGER,
+      useremail: {
+        type: DataTypes.STRING(50),
         references: {
-          model: 'UserInformation',
-          key: 'CustomerID',
+            model: Users,
+            key: 'email',
         },
       },
-      Amount: {
+      amount: {
         type: DataTypes.FLOAT,
         allowNull: false,
       },
-      Date: {
+      date: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
         allowNull: false,
       },
-      Type: {
+      type: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -41,8 +43,8 @@ class Transaction extends Model {
     {
       sequelize,
       modelName: 'Transaction',
-      tableName: 'transactions',
-      timestamps: false,
+      tableName: 'Transactions',
+      //timestamps: false,
     }
   );
   

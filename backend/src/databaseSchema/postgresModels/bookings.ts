@@ -1,46 +1,49 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../../databaseConnection/postgres.js';
 
+import { Users } from './user.js';
+
 class Booking extends Model {
-    public BookingID!: number;
-    public CustomerID!: number;
-    public EventID!: number;
-    public NumberOfTickets!: number;
-    public TotalPrice!: number;
-    public BookingDate!: Date;
+    public bookingID!: number;
+    public usermail!: number;
+    public eventID!: number;
+    public numberOfTickets!: number;
+    public totalPrice!: number;
+    public bookingDate!: Date;
   }
   
   Booking.init(
     {
-      BookingID: {
+      bookingID: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
         allowNull: false,
       },
-      CustomerID: {
-        type: DataTypes.INTEGER,
+      useremail: {
+        type: DataTypes.STRING(50),
         references: {
-          model: 'UserInformation',
-          key: 'CustomerID',
+            model: Users,
+            key: 'email',
         },
-      },
-      EventID: {
+        onDelete: 'CASCADE', //wenn User löschen = Buchung löschen!
+    },
+      eventID: {
         type: DataTypes.INTEGER,
-        references: {
-          model: 'Eventdetails',
-          key: 'EventID',
-        },
+        //references: {
+          //model: 'Eventdetails',
+          //key: 'eventID',
+        //},
       },
-      NumberOfTickets: {
+      numberOfTickets: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      TotalPrice: {
+      totalPrice: {
         type: DataTypes.FLOAT,
         allowNull: false,
       },
-      BookingDate: {
+      bookingDate: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,
         allowNull: false,
@@ -49,7 +52,7 @@ class Booking extends Model {
     {
       sequelize,
       modelName: 'Booking',
-      tableName: 'bookings',
+      tableName: 'Bookings',
       timestamps: false,
     }
   );
