@@ -17,10 +17,10 @@
     "cors": "^2.8.5",
     "express": "^4.21.1",
     "mongodb": "^4.0.0",
+    "mongoose": "^8.8.4",
     "pg": "^8.7.1",
     "rimraf": "^5.0.0",
-    "sequelize": "^6.37.3",
-    "mongoose": "^8.8.4"
+    "sequelize": "^6.37.5"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
