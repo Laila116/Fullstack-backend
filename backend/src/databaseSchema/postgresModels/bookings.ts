@@ -1,18 +1,18 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../../databaseConnection/postgres.js';
-
+import { iBookings } from '../../interface/iBookings.js';
 import { Users } from './user.js';
 
-class Booking extends Model {
+class Bookings extends Model<iBookings> implements iBookings {
     public bookingID!: number;
-    public usermail!: number;
+    public useremail!: string;
     public eventID!: number;
     public numberOfTickets!: number;
     public totalPrice!: number;
     public bookingDate!: Date;
   }
   
-  Booking.init(
+  Bookings.init(
     {
       bookingID: {
         type: DataTypes.INTEGER,
@@ -57,4 +57,4 @@ class Booking extends Model {
     }
   );
   
-  export default Booking;
+  export default Bookings;

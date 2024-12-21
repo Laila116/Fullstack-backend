@@ -1,17 +1,17 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../../databaseConnection/postgres.js';
-
+import { iTransactions } from '../../interface/iTransactions.js';
 import { Users } from './user.js';
 
-class Transaction extends Model {
+class Transactions extends Model<iTransactions> implements iTransactions {
     public transactionID!: number;
-    public usermail!: number;
+    public useremail!: string;
     public amount!: number;
     public date!: Date;
     public type!: string;
   }
   
-  Transaction.init(
+  Transactions.init(
     {
       transactionID: {
         type: DataTypes.INTEGER,
@@ -20,20 +20,27 @@ class Transaction extends Model {
         allowNull: false,
       },
       useremail: {
-        type: DataTypes.STRING(50),
+        type: DataTypes.STRING(50), // EMial des Nutzers, verknüpft mit Users.email
+        allowNull: false,
         references: {
             model: Users,
             key: 'email',
         },
+        onUpdate: 'CASCADE', // Verhalten bei Updates des Fremdschlüssels
+        onDelete: 'CASCADE', // Verhalten bei Löschung des Fremdschlüssels
       },
       amount: {
         type: DataTypes.FLOAT,
         allowNull: false,
+        validate: {
+          isFloat: true, // Sicherstellen, dass der Betrag eine gültige Gleitkommazahl ist 
+          min: 0, // NEgative Werte verhindern
+        },
       },
       date: {
         type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
         allowNull: false,
+        defaultValue: DataTypes.NOW,
       },
       type: {
         type: DataTypes.STRING,
@@ -44,8 +51,8 @@ class Transaction extends Model {
       sequelize,
       modelName: 'Transaction',
       tableName: 'Transactions',
-      //timestamps: false,
+      underscored: true,
     }
   );
   
-  export default Transaction;
+  export default Transactions;

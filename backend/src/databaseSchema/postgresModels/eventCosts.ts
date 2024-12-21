@@ -1,7 +1,8 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../../databaseConnection/postgres.js';
+import { iEventCosts } from '../../interface/iEventCosts.js';
 
-class EventCosts extends Model {
+class EventCosts extends Model<iEventCosts> implements iEventCosts {
   public eventID!: number;
   public ticketCost!: number;
   public eventName!: string; 
