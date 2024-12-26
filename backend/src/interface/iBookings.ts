@@ -6,3 +6,10 @@ export interface iBookings {
     totalPrice: number; 
     bookingDate: Date;
 }
+
+export interface iBookingCreationAttributes extends Partial<Pick<iBookings, 'bookingID' | 'bookingDate'>> {
+    useremail: string;
+    eventID: number;
+    numberOfTickets: number;
+    totalPrice: number;
+}

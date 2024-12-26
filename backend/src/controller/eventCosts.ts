@@ -9,7 +9,8 @@ async function createEventCost(req: Request, res: Response, next: NextFunction):
 
         const eventCostData = {
             eventID,
-            ticketCost
+            ticketCost,
+            eventName: req.body.eventName || null,
         };
 
         const newEventCost = await EventCosts.create(eventCostData); // Erstellen in der PostgreSQL-Datenbank
@@ -28,9 +29,14 @@ async function createEventCost(req: Request, res: Response, next: NextFunction):
 // Funktion zum Abrufen eines EventCosts
 async function getEventCost(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-        const { id } = req.params; // Extrahiert id aus der URL
+        const id = req.query.id as string; // ID aus Query-Parameter
 
-        const eventCost = await EventCosts.findByPk(id); // Hole das EventCost aus der PostgreSQL-Datenbank
+        if (!id) {
+            res.status(400).json({ message: 'ID wird benötigt' });
+            return;
+        }
+
+        const eventCost = await EventCosts.findByPk(id);
 
         if (!eventCost) {
             res.status(404).json({ message: 'EventCost nicht gefunden' });
@@ -38,7 +44,6 @@ async function getEventCost(req: Request, res: Response, next: NextFunction): Pr
         }
 
         res.status(200).json(eventCost);
-
     } catch (error: any) {
         console.error('Fehler beim Abrufen von EventCosts:', error.message);
         next(error);
@@ -48,24 +53,26 @@ async function getEventCost(req: Request, res: Response, next: NextFunction): Pr
 // Funktion zum Aktualisieren eines EventCosts
 async function updateEventCost(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-        const { id } = req.params; 
-        const { eventID, ticketCost } = req.body; // Daten aus dem Body
+        const { id, eventID, ticketCost } = req.body; // ID aus dem Body
 
-        const eventCost = await EventCosts.findByPk(id); // Sucht den Datenbank mit der ID
+        if (!id) {
+            res.status(400).json({ message: 'ID wird benötigt' });
+            return;
+        }
+
+        const eventCost = await EventCosts.findByPk(id);
 
         if (!eventCost) {
             res.status(404).json({ message: 'EventCost nicht gefunden' });
             return;
         }
 
-        // Aktualisieren des EventCosts
         eventCost.eventID = eventID;
         eventCost.ticketCost = ticketCost;
 
-        await eventCost.save(); // Speichere die Änderungen
+        await eventCost.save();
 
         res.status(200).json(eventCost);
-
     } catch (error: any) {
         console.error('Fehler beim Aktualisieren von EventCosts:', error.message);
         next(error);
@@ -75,19 +82,23 @@ async function updateEventCost(req: Request, res: Response, next: NextFunction):
 // Funktion zum Löschen eines EventCosts
 async function deleteEventCost(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-        const { id } = req.params; 
+        const { id } = req.body; // ID aus dem Body
 
-        const eventCost = await EventCosts.findByPk(id); 
+        if (!id) {
+            res.status(400).json({ message: 'ID wird benötigt' });
+            return;
+        }
+
+        const eventCost = await EventCosts.findByPk(id);
 
         if (!eventCost) {
             res.status(404).json({ message: 'EventCost nicht gefunden' });
             return;
         }
 
-        await eventCost.destroy(); // Lösche das EventCost
+        await eventCost.destroy();
 
         res.status(200).json({ message: 'EventCost erfolgreich gelöscht' });
-
     } catch (error: any) {
         console.error('Fehler beim Löschen von EventCosts:', error.message);
         next(error);

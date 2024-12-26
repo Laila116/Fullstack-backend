@@ -20,12 +20,12 @@ export async function createBooking(req: Request, res: Response, next: NextFunct
     }
 }
 
-// GET: Buchung abrufen (mit ID)
+// POST: Buchung abrufen
 export async function getBooking(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-        const { id } = req.params;
+        const { bookingID } = req.body;
 
-        const booking = await Booking.findByPk(id);
+        const booking = await Booking.findOne({ where: { bookingID: bookingID } });
 
         if (!booking) {
             res.status(404).json({ message: 'Buchung nicht gefunden' });
@@ -56,13 +56,12 @@ export async function getAllBookings(req: Request, res: Response, next: NextFunc
     }
 }
 
-// PUT: Buchung aktualisieren (mit ID)
+// PUT: Buchung aktualisieren
 export async function updateBooking(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-        const { id } = req.params;
-        const { numberOfTickets, totalPrice } = req.body;
+        const { bookingID, numberOfTickets, totalPrice } = req.body;
 
-        const booking = await Booking.findByPk(id);
+        const booking = await Booking.findOne({ where: { bookingID: bookingID } });
 
         if (!booking) {
             res.status(404).json({ message: 'Buchung nicht gefunden' });
@@ -80,12 +79,12 @@ export async function updateBooking(req: Request, res: Response, next: NextFunct
     }
 }
 
-// DELETE: Buchung löschen (mit ID)
+// DELETE: Buchung löschen
 export async function deleteBooking(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-        const { id } = req.params;
+        const { bookingID } = req.body;
 
-        const booking = await Booking.findByPk(id);
+        const booking = await Booking.findOne({ where: { bookingID: bookingID } });
 
         if (!booking) {
             res.status(404).json({ message: 'Buchung nicht gefunden' });
@@ -101,4 +100,4 @@ export async function deleteBooking(req: Request, res: Response, next: NextFunct
     }
 }
 
-//export { createBooking, getAllBooking, getAllBookings, updateBooking, deleteBooking };
+//export { createBooking, getBooking, getAllBookings, updateBooking, deleteBooking };

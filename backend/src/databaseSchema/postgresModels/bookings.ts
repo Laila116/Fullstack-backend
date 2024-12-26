@@ -1,9 +1,9 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../../databaseConnection/postgres.js';
-import { iBookings } from '../../interface/iBookings.js';
+import { iBookings, iBookingCreationAttributes} from '../../interface/iBookings.js';
 import { Users } from './user.js';
 
-class Bookings extends Model<iBookings> implements iBookings {
+class Bookings extends Model<iBookings, iBookingCreationAttributes> implements iBookings {
     public bookingID!: number;
     public useremail!: string;
     public eventID!: number;

@@ -1,8 +1,8 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../../databaseConnection/postgres.js';
-import { iEventCosts } from '../../interface/iEventCosts.js';
+import { iEventCosts, iEventCostsCreationAttributes } from '../../interface/iEventCosts.js';
 
-class EventCosts extends Model<iEventCosts> implements iEventCosts {
+class EventCosts extends Model<iEventCosts, iEventCostsCreationAttributes> implements iEventCosts {
   public eventID!: number;
   public ticketCost!: number;
   public eventName!: string; 
@@ -25,13 +25,13 @@ EventCosts.init(
       },
       eventName: {
           type: DataTypes.STRING,
-          allowNull: false,
+          allowNull: true,
       },
   },
   {
       sequelize,
       modelName: 'EventCosts',
-      tableName: 'Event_costs',
+      tableName: 'EventCosts',
       timestamps: false,
   }
 );

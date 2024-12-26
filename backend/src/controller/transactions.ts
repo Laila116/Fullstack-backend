@@ -1,15 +1,18 @@
 import { Request, Response, NextFunction } from 'express';
 import Transaction from '../databaseSchema/postgresModels/transactions';
+import { iTransactions } from '../interface/iTransactions';
 
 // Funktion zum Erstellen einer neuen Transaktion
 async function createTransaction(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-        const { userEmail, amount, transactionType } = req.body;
+        const { useremail, amount, type } = req.body;
 
-        const transactionData = {
-            userEmail,
+        const transactionData: iTransactions = {
+            useremail,
             amount,
-            transactionType,
+            type,
+            date: new Date(),
+            transactionID: 0, // Sicherstellen, dass der Wert gesetzt wird (dieser wird später von der DB überschrieben)
         };
 
         const newTransaction = await Transaction.create(transactionData);
@@ -27,9 +30,9 @@ async function createTransaction(req: Request, res: Response, next: NextFunction
 // Funktion zum Abrufen einer Transaktion
 async function getTransaction(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-        const { id } = req.params;
+        const { transactionID } = req.body;
 
-        const transaction = await Transaction.findByPk(id);
+        const transaction = await Transaction.findOne({ where: { transactionID } });
 
         if (!transaction) {
             res.status(404).json({ message: 'Transaktion nicht gefunden' });
@@ -46,19 +49,18 @@ async function getTransaction(req: Request, res: Response, next: NextFunction): 
 // Funktion zum Aktualisieren einer Transaktion
 async function updateTransaction(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-        const { id } = req.params;
-        const { userEmail, amount, transactionType } = req.body;
+        const { transactionID, useremail, amount, type } = req.body;
 
-        const transaction = await Transaction.findByPk(id);
+        const transaction = await Transaction.findOne({ where: { transactionID } });
 
         if (!transaction) {
             res.status(404).json({ message: 'Transaktion nicht gefunden' });
             return;
         }
 
-        transaction.useremail = userEmail;
+        transaction.useremail = useremail;
         transaction.amount = amount;
-        transaction.transactionID = transactionType;
+        transaction.type = type;
 
         await transaction.save();
 
@@ -72,9 +74,9 @@ async function updateTransaction(req: Request, res: Response, next: NextFunction
 // Funktion zum Löschen einer Transaktion
 async function deleteTransaction(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-        const { id } = req.params;
+        const { transactionID } = req.body;
 
-        const transaction = await Transaction.findByPk(id);
+        const transaction = await Transaction.findOne({ where: { transactionID } });
 
         if (!transaction) {
             res.status(404).json({ message: 'Transaktion nicht gefunden' });

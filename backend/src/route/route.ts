@@ -7,62 +7,31 @@ import { createBooking, getBooking, getAllBookings, updateBooking, deleteBooking
 
 const router = express.Router();
 
-// POST Route zum Erstellen eines Nutzers
+// Nutzer-Routen
 router.post('/user/createUser', createUser);
-
-// DELETE Route zum Löschen eines Nutzers (mit ID)
 router.delete('/user/deleteUser', deleteUser);
-
-// GET Route zum Abrufen von Nutzerdaten (mit ID)
 router.get('/user/getUserData', getUserData);
 
-
-
-
-// POST Route zum Erstellen eines komentars
+// Feedback-Routen
 router.post('/feedback/createFeedback', createFeedback);
 
-// GET Route zum Abrufen von EventCosts (mit ID)
-router.get('/eventCosts/:id', getEventCost);
+// EventCosts-Routen
+router.post('/eventCosts/create', createEventCost);
+router.get('/eventCosts', getEventCost);
+router.put('/eventCosts/update', updateEventCost);
+router.delete('/eventCosts/delete', deleteEventCost);
 
-// PUT Route zum Aktualisieren eines EventCosts (mit ID)
-router.put('/eventCosts/:id', updateEventCost);
+// Transaktion-Routen
+router.post('/transaction/create', createTransaction);
+router.post('/transaction/get', getTransaction);
+router.put('/transaction/update', updateTransaction);
+router.delete('/transaction/delete', deleteTransaction);
 
-// DELETE Route zum Löschen eines EventCosts (mit ID)
-router.delete('/eventCosts/:id', deleteEventCost);
-
-
-
-
-// POST Route für Transaktion erstellen
-router.post('/transaction', createTransaction);
-
-// GET Route für eine einzelne Transaktion
-router.get('/transaction/:id', getTransaction);
-
-// PUT Route für Transaktion aktualisieren
-router.put('/transaction/:id', updateTransaction);
-
-// DELETE Route für Transaktion löschen
-router.delete('/transaction/:id', deleteTransaction);
-
-
-
-
-
-// POST Route zum Erstellen einer Buchung
-router.post('/booking', createBooking);
-
-// GET Route zum Abrufen einer Buchung (mit ID)
-router.get('/booking/:id', getBooking);
-
-// GET Route zum Abrufen aller Buchungen
+// Bookings-Routen
+router.post('/booking/create', createBooking);
+router.post('/booking/get', getBooking); // um eine spezifische Buchung abzurufen
 router.get('/bookings', getAllBookings);
-
-// PUT Route zum Aktualisieren einer Buchung (mit ID)
-router.put('/booking/:id', updateBooking);
-
-// DELETE Route zum Löschen einer Buchung (mit ID)
-router.delete('/booking/:id', deleteBooking);
+router.put('/booking/update', updateBooking);
+router.delete('/booking/delete', deleteBooking);
 
 export { router };
