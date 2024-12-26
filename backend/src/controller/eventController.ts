@@ -4,7 +4,11 @@ import { NextFunction, Request, Response } from "express";
 import Event from "../databaseSchema/mongoModels/Eventinfo";
 
 // CREATE: Neuer Event
-export const createEvent = async (req: Request, res: Response) => {
+export const createEvent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const { name, date, location, description } = req.body;
 
   try {
@@ -13,40 +17,51 @@ export const createEvent = async (req: Request, res: Response) => {
     res
       .status(201)
       .json({ message: "Event erfolgreich hinzugefügt 😊", event: newEvent });
-  } catch (error) {
+  } catch (error: any) {
+    console.error("Fehler beim hinfügen des Events", error.message);
     res.status(500).json({ message: "Event ist schon existiert 😞", error });
+    next(error);
   }
 };
 
 // READ: Alle Events
 export const getAllEvents = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void> => {
   try {
-    const events = await Event.find();
+    const events = await Event.find(); //Events aus der Datenbank holen
+    if (!events || events.length == 0) {
+      res.status(404).json({ message: "kein Event wurde gefunden" });
+      return;
+    }
     res.status(200).json(events);
-  } catch (error) {
-    // Verwende return, um sicherzustellen, dass keine doppelte Antwort gesendet wird
-    res.status(500).json({
-      message: (error as Error).message || "Ein Fehler ist aufgetreten 😞",
-    });
+  } catch (error: any) {
+    console.error("Fehler beim finden den Events:", error.message);
+    res.status(500).json({ message: error });
+    next(error);
   }
 };
 
 // READ: Event by Name
 export const getEventByName = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void> => {
   try {
     const { name } = req.params;
     const event = await Event.findOne({ name });
-    if (!event) res.status(404).json({ message: "Event not found 😟" });
+    if (!event) {
+      res.status(404).json({ message: "Event not found 😟" });
+      return;
+    }
     res.status(200).json(event);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Fehler bei getEventByName:", error);
-    res.status(500).json({ message: (error as Error).message });
+    res.status(500).json({ message: error.message });
+    next(error);
   }
 };
 
@@ -69,13 +84,15 @@ export const updateEvent = async (
       { name, date, location, description },
       { new: true, runValidators: true }
     );
-    if (!updatedEvent)
+    if (!updatedEvent) {
       res.status(404).json({ message: "Event nicht gefunden 😟" });
+      return;
+    }
     res
       .status(200)
       .json({ message: "Event erfolgreich aktualisiert! 😊 ", updatedEvent });
-  } catch (error) {
-    console.error("Fehler beim Update des Events:", error);
+  } catch (error: any) {
+    console.error("Fehler beim Update des Events:", error.message);
     res.status(500).json({ message: error });
     next(error);
   }
@@ -93,18 +110,20 @@ export const deleteEvent = async (
     // Validierung: Ist die ID im Body vorhanden?
     if (!id) {
       res.status(400).json({ message: "Event-ID ist erforderlich" });
+      return;
     }
     // Versuche, das Event zu finden und zu löschen
     const deletedEvent = await Event.findByIdAndDelete(id);
     if (!deletedEvent) {
       res.status(404).json({ message: "Event nicht gefunden" });
+      return;
     }
     res
       .status(200)
       .json({ message: "Event erfolgreich gelöscht", event: deletedEvent });
   } catch (error: any) {
     console.error("Fehler beim Löschen des Events:", error.message);
-    res.status(500).json({ message: error });
+    res.status(500).json({ message: error.message });
     next(error);
   }
 };
