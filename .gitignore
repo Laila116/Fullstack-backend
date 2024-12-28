@@ -15,3 +15,4 @@ datenbank/postgres
 
 # Log-Dateien
 #*.log
+node_modules
