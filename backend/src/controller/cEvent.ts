@@ -1,7 +1,7 @@
 // ./controllers/eventController.ts
 
 import { NextFunction, Request, Response } from "express";
-import Event from "../databaseSchema/mongoModels/Eventinfo";
+import Event from "../databaseSchema/mongoModels/mEvent";
 
 // CREATE: Neuer Event
 export const createEvent = async (

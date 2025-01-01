@@ -10,6 +10,7 @@ class Users extends Model<UserData> implements UserData{
   public email!: string;
   public password!: string;
   public balance!: number;
+  public role!: string;
 
   public static async createUser(userData: UserData): Promise<UserData|null> {
     console.log("userData: ", userData);
@@ -23,6 +24,7 @@ class Users extends Model<UserData> implements UserData{
           phone: userData.phone,
           birthday: userData.birthday,
           balance: 0.0,
+          role: userData.role,
         },
       );
       console.log("userData2: ", newUser);
@@ -54,6 +56,13 @@ class Users extends Model<UserData> implements UserData{
 
   public static async deleteUser(userEmail: string): Promise<number|null> {
     try {
+      /* test für delet feedback bei delet user 
+        1.getUserData
+        2.UserID raus schreiben in Variable 
+        3.Mongo feedback tabelle. delet aufrufen mit user id
+
+        also erst die feedbacks vom user lköschen und dann den user selbst lsöchen, das alles soll aber dann hier im deletUser passieren
+      */
       const deleted = await Users.destroy({ where: { email: userEmail } });
 
       if (deleted === 0) {
@@ -104,6 +113,10 @@ Users.init(
           isDecimal: { msg: 'Balance must be a valid decimal number' },
           min: { args: [0], msg: 'Balance cannot be negative' },
       },
+    },
+    role:{
+      type: DataTypes.STRING(20),
+      allowNull: false,
     }
   },
   {

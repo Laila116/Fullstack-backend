@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import EventCosts from '../databaseSchema/postgresModels/eventCosts';
+import EventCosts from '../databaseSchema/postgresModels/mEventCosts';
 // import eventDetails 
 
 // Funktion zum Erstellen eines neuen EventCosts

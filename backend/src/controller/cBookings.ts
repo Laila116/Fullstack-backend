@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import Booking from '../databaseSchema/postgresModels/bookings';
+import Booking from '../databaseSchema/postgresModels/mBookings';
 
 // POST: Buchung erstellen
 export async function createBooking(req: Request, res: Response, next: NextFunction): Promise<void> {

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import Transaction from '../databaseSchema/postgresModels/transactions';
+import Transaction from '../databaseSchema/postgresModels/mTransactions';
 import { iTransactions } from '../interface/iTransactions';
 
 // Funktion zum Erstellen einer neuen Transaktion

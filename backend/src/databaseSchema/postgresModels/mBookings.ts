@@ -1,7 +1,7 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../../databaseConnection/postgres.js';
 import { iBookings, iBookingCreationAttributes} from '../../interface/iBookings.js';
-import { Users } from './user.js';
+import { Users } from './mUser.js';
 
 class Bookings extends Model<iBookings, iBookingCreationAttributes> implements iBookings {
     public bookingID!: number;

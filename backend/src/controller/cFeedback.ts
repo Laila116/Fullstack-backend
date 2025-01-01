@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import Feedback from '../databaseSchema/mongoModels/feedback';
+import Feedback from '../databaseSchema/mongoModels/mFeedback';
 
 async function createFeedback(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {

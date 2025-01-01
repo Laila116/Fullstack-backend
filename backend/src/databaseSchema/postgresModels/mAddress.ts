@@ -2,7 +2,7 @@ import { sequelize } from '../../databaseConnection/postgres.js';
 import { Model, DataTypes } from 'sequelize';
 import { AddressAttributes} from '../../interface/iAddress.js';
 
-import { Users } from './user.js';
+import { Users } from './mUser.js';
 
 class Address extends Model<AddressAttributes> implements AddressAttributes{
     public addresseId?: number;

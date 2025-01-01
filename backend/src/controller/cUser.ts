@@ -1,14 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
-import { Users } from '../databaseSchema/postgresModels/user.js';
-import { Address } from '../databaseSchema/postgresModels/address.js';
+import { Users } from '../databaseSchema/postgresModels/mUser.js';
+import { Address } from '../databaseSchema/postgresModels/mAddress.js';
 
 async function createUser(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-        const { email, password, firstname, surname, phone, birthday, city, postcode, street, houseNumber } = req.body;
-        console.log(email, password, firstname, surname, phone, birthday, city, postcode, street, houseNumber);
+        const { email, password, firstname, surname, phone, birthday, role, city, postcode, street, houseNumber } = req.body;
+        console.log(email, password, firstname, surname, phone, birthday, role, city, postcode, street, houseNumber);
 
         // Validierung der notwendigen Felder
-        if (!email || !password || !firstname || !surname || !phone || !birthday || !city || !postcode || !street || ! houseNumber) {
+        if (!email || !password || !firstname || !surname || !phone || !birthday || !role || !city || !postcode || !street || ! houseNumber) {
             res.status(400).json({ error: 'Missing required fields' });
             return;
         }
@@ -28,6 +28,7 @@ async function createUser(req: Request, res: Response, next: NextFunction): Prom
             phone,
             birthday,
             balance: 0.0, // Balance explizit setzen
+            role,
         }
         const newUser = await Users.createUser(newUserData);
 

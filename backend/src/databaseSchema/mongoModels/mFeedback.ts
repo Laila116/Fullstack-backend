@@ -3,7 +3,7 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 // Definiere das Event-Interface für Typsicherheit
 export interface IFeedback extends Document {
     eventID: number;
-    userID: number;
+    userID: string;
     feedback: number;
     comment: string;
 }
@@ -11,7 +11,7 @@ export interface IFeedback extends Document {
 const FeedbackSchema: Schema = new Schema(
     {
         eventID: { type: Number, required: true },
-        userID: { type: Number, required: true },
+        userID: { type: String, required: true },
         feedback: {
             type: Number,
             required: true,

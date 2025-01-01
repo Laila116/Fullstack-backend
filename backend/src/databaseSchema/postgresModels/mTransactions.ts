@@ -1,7 +1,7 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../../databaseConnection/postgres.js';
 import { iTransactions } from '../../interface/iTransactions.js';
-import { Users } from './user.js';
+import { Users } from './mUser.js';
 
 class Transactions extends Model<iTransactions> implements iTransactions {
     public transactionID!: number;
