@@ -1,8 +1,8 @@
 import { sequelize } from '../../databaseConnection/postgres.js';
 import { Model, DataTypes } from 'sequelize';
-import { UserData} from '../../interface/interface.js';
+import { UserData} from '../../interface/iUser.js';
 
-class Users extends Model {
+class Users extends Model<UserData> implements UserData{
   public firstname!: string;
   public surname!: string;
   public phone!: string;
@@ -10,26 +10,6 @@ class Users extends Model {
   public email!: string;
   public password!: string;
   public balance!: number;
-  
-  public static async getUserData(userEmail: string): Promise<UserData|null> {
-    try {
-      console.log('Fetching user data for email:', userEmail);  // Debugging-Linie
-      const user = await Users.findOne ({ where: { email: userEmail }, });
-
-      // schaut nach user
-      if (!user) {
-          throw new Error(`User with Email ${userEmail} not found`);
-      }
-      console.log('User found:', user);  // Debugging-Linie
-
-      return user.dataValues;
-      
-    } catch (error: any) {
-      console.error(`Error fetching user data for Email ${userEmail}:`, error.message);
-      //throw new Error('Failed to fetch user data. Please try again later.');
-      return null;
-    }
-  }
 
   public static async createUser(userData: UserData): Promise<UserData|null> {
     console.log("userData: ", userData);
@@ -50,8 +30,25 @@ class Users extends Model {
       return newUser;
     } catch (error:any) {
       console.error('Error creating user with address:', error.message);
-      //throw new Error('Failed to create user and address. Please try again later.');
       return null;
+    }
+  }
+
+  public static async getUserData(userEmail: string): Promise<UserData|null> {
+    try {
+      console.log('Fetching user data for email:', userEmail);  // Debugging-Linie
+      const user = await Users.findOne ({ where: { email: userEmail }, });
+
+      // schaut nach user
+      if (!user) {
+        console.error(`User with Email ${userEmail} not found`);
+        return null;
+      }
+
+      return user.dataValues;
+    } catch (error: any) {
+      console.error(`Error fetching user data for Email ${userEmail}:`, error.message);
+      return null; 
     }
   }
 
@@ -67,7 +64,6 @@ class Users extends Model {
 
     } catch (error: any) {
       console.error(`Error deleting user with Email ${userEmail}:`, error.message);
-      //throw new Error('Failed to delete user. Please try again later.');
       return null;
     }
   }

@@ -1,10 +1,11 @@
 import { sequelize } from '../../databaseConnection/postgres.js';
 import { Model, DataTypes } from 'sequelize';
-import { AddressAttributes} from '../../interface/interface.js';
+import { AddressAttributes} from '../../interface/iAddress.js';
 
 import { Users } from './user.js';
 
-class Address extends Model{
+class Address extends Model<AddressAttributes> implements AddressAttributes{
+    public addresseId?: number;
     public useremail!: string;   // Email des Users
     public city!: string;        // Stadt
     public postcode!: string;    // Postleitzahl
