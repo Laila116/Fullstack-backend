@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import { router } from "./route/route.js";
-import eventRoutes from "./route/eventRoutes.js";
 import { connectToDatabase } from "./databaseConnection/postgres.js";
 import { connectToMongoDB } from "./databaseConnection/mongoDB.js";
 
@@ -11,7 +10,6 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use("/api", router);
-app.use("/api", eventRoutes);
 
 app.get("/", (req, res) => {
   res.send("Hello from the backend 1234!");

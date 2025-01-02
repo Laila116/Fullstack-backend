@@ -1,17 +1,11 @@
 import mongoose, { Schema, Document, Model } from 'mongoose';
+import { IFeedback } from "../../interface/iFeedback";
 
-// Definiere das Event-Interface für Typsicherheit
-export interface IFeedback extends Document {
-    eventID: number;
-    userID: string;
-    feedback: number;
-    comment: string;
-}
 
-const FeedbackSchema: Schema = new Schema(
+const FeedbackSchema: Schema<IFeedback> = new Schema(
     {
         eventID: { type: Number, required: true },
-        userID: { type: String, required: true },
+        userEmail: { type: String, required: true },
         feedback: {
             type: Number,
             required: true,

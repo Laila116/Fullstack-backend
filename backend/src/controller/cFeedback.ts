@@ -3,12 +3,12 @@ import Feedback from '../databaseSchema/mongoModels/mFeedback';
 
 async function createFeedback(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-        const { eventID, userID, feedback, comment } = req.body;
-        console.log( eventID, userID, feedback, comment);
+        const { eventID, userEmail, feedback, comment } = req.body;
+        console.log( eventID, userEmail, feedback, comment);
         
         const feedbackData = {
             eventID,
-            userID,
+            userEmail,
             feedback,
             comment
         };

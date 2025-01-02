@@ -1,12 +1,5 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
-
-// Definiere das Event-Interface für Typsicherheit
-export interface IEvent extends Document {
-  name: string;
-  date: Date;
-  location: string;
-  description?: string; // Description ist optional
-}
+import { IEvent } from "../../interface/iEvent";
 
 // Definiere das Event-Schema
 const eventSchema: Schema<IEvent> = new Schema(
