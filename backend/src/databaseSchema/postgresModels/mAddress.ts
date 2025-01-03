@@ -46,6 +46,7 @@ Address.init(
             model: Users,
             key: 'email',
         },
+        onUpdate: 'CASCADE', // Verhalten bei Updates des Fremdschlüssels
         onDelete: 'CASCADE',
     },
     city: {

@@ -14,10 +14,6 @@ EventCosts.init(
           type: DataTypes.INTEGER,
           primaryKey: true,
           allowNull: false,
-          /*references: {
-              model: 'Eventdetails',
-              key: 'eventID',
-          },*/
       },
       ticketCost: {
           type: DataTypes.FLOAT,

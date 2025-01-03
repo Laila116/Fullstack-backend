@@ -30,10 +30,7 @@ class Bookings extends Model<iBookings, iBookingCreationAttributes> implements i
     },
       eventID: {
         type: DataTypes.INTEGER,
-        //references: {
-          //model: 'Eventdetails',
-          //key: 'eventID',
-        //},
+        allowNull: false,
       },
       numberOfTickets: {
         type: DataTypes.INTEGER,

@@ -4,7 +4,7 @@ import { IFeedback } from "../../interface/iFeedback";
 
 const FeedbackSchema: Schema<IFeedback> = new Schema(
     {
-        eventID: { type: Number, required: true },
+        eventID: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Event' },
         userEmail: { type: String, required: true },
         feedback: {
             type: Number,

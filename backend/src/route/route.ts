@@ -1,5 +1,5 @@
 import express from 'express';
-import {createUser, deleteUser, getUserData} from '../controller/cUser.js';
+import {createUser, getUserData, updateUserData, deleteUser } from '../controller/cUser.js';
 import { createFeedback } from '../controller/cFeedback.js';
 import { createEventCost, getEventCost, updateEventCost, deleteEventCost } from '../controller/cEventCosts.js';
 import { createTransaction, getTransaction, updateTransaction, deleteTransaction } from '../controller/cTransactions.js';
@@ -10,8 +10,9 @@ const router = express.Router();
 
 // Nutzer-Routen
 router.post('/user/createUser', createUser);
-router.delete('/user/deleteUser', deleteUser);  // als Params muss aber als body
-router.get('/user/getUserData', getUserData);   // als Params muss aber als body
+router.post('/user/getUserData', getUserData);
+router.put('/user/updateUserData', updateUserData);
+router.delete('/user/deleteUser', deleteUser);
 
 // Feedback-Routen
 router.post('/feedback/createFeedback', createFeedback);

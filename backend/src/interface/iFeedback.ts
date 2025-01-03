@@ -1,7 +1,7 @@
-import { Document } from "mongoose";
+import { Document, ObjectId } from "mongoose";
 
 export interface IFeedback extends Document {
-    eventID: number;
+    eventID: ObjectId;
     userEmail: string;
     feedback: number;
     comment: string;
