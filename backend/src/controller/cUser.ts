@@ -41,7 +41,6 @@ export async function createUser(req: Request, res: Response, next: NextFunction
             street,
             houseNumber,
         });
-        //const newAddress = await Address.createAddress(newUserAddress);
 
         res.status(201).json({ message: 'Nutzer erfolgreich erstellt', newUser, newUserAddress });
 

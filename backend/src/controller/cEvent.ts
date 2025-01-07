@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import Event from "../databaseSchema/mongoModels/mEvent";
 import Users from "../databaseSchema/postgresModels/mUser";
-import Feedback from "../databaseSchema/mongoModels/mFeedback";  // Feedback-Datenmodell
-import EventCosts from "../databaseSchema/postgresModels/mEventCosts";  // Ticket-Kosten-Datenmodell
+import Feedback from "../databaseSchema/mongoModels/mFeedback";  
+import EventCosts from "../databaseSchema/postgresModels/mEventCosts";
 
 export const createEvent = async (
   req: Request,
@@ -88,27 +88,6 @@ export const getAllEvents = async (
     next(error);
   }
 };
-
-/*// READ: Event by Name
-export const getEventByName = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const { name } = req.params;
-    const event = await Event.findOne({ name });
-    if (!event) {
-      res.status(404).json({ message: "Event not found 😟" });
-      return;
-    }
-    res.status(200).json(event);
-  } catch (error: any) {
-    console.error("Fehler bei getEventByName:", error);
-    res.status(500).json({ message: error.message });
-    next(error);
-  }
-};*/
 
 // UPDATE: Event
 export const updateEvent = async (
@@ -208,71 +187,7 @@ export const deleteEvent = async (
     next(error);
   }
 };
-/*
-// READ: Filter Events nach Kategorie
-export const getAllEventsByKategorie = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const { kategorie } = req.body; // Kategorie aus dem Body extrahieren
 
-    // Validierung: Ist die Kategorie vorhanden?
-    if (!kategorie) {
-      res.status(400).json({ message: "Kategorie ist erforderlich" });
-      return;
-    }
-
-    // Events nach Kategorie filtern
-    const events = await Event.find({ category: kategorie });
-
-    // Überprüfen, ob Events gefunden wurden
-    if (!events || events.length === 0) {
-      res.status(404).json({ message: `Keine Events in Kategorie ${kategorie} gefunden` });
-      return;
-    }
-
-    res.status(200).json(events);
-  } catch (error: any) {
-    console.error("Fehler beim Filtern nach Kategorie:", error.message);
-    res.status(500).json({ message: "Ein unerwarteter Fehler ist aufgetreten", error });
-    next(error);
-  }
-};
-
-// READ: Filter Events nach Ort
-export const getAllEventsByOrt = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const { ort } = req.body; // Ort aus dem Body extrahieren
-
-    // Validierung: Ist der Ort vorhanden?
-    if (!ort) {
-      res.status(400).json({ message: "Ort ist erforderlich" });
-      return;
-    }
-
-    // Events nach Ort filtern
-    const events = await Event.find({ location: ort });
-
-    // Überprüfen, ob Events gefunden wurden
-    if (!events || events.length === 0) {
-      res.status(404).json({ message: `Keine Events am Ort ${ort} gefunden` });
-      return;
-    }
-
-    res.status(200).json(events);
-  } catch (error: any) {
-    console.error("Fehler beim Filtern nach Ort:", error.message);
-    res.status(500).json({ message: "Ein unerwarteter Fehler ist aufgetreten", error });
-    next(error);
-  }
-};
-*/
 // READ: Alle Daten für ein ausgewähltes Event (Event-Daten, Ticket-Kosten und Feedbacks)
 export const getSelectedEventData = async (
   req: Request,
@@ -333,9 +248,6 @@ export const getSelectedEventData = async (
   }
 };
 
-
-
-
 // READ: Filter Events nach Kategorie und Ort
 export const getAllEventsByKategorieUndOrt = async (
   req: Request,
@@ -380,125 +292,6 @@ export const getAllEventsByKategorieUndOrt = async (
   }
 };
 
-/*
-// READ: Filter Orte nach Kategorie
-export const getAllOrteByKategorie = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const { kategorie } = req.body; // Kategorie aus dem Body extrahieren
-
-    // Validierung: Ist die Kategorie vorhanden?
-    if (!kategorie) {
-      res.status(400).json({ message: "Kategorie ist erforderlich" });
-      return;
-    }
-
-    // Orte basierend auf der Kategorie filtern
-    const events = await Event.find({ category: kategorie });
-
-    if (!events || events.length === 0) {
-      res.status(404).json({ message: `Keine Orte für die Kategorie ${kategorie} gefunden` });
-      return;
-    }
-
-    // Extrahiere die Orte und entferne Duplikate
-    const uniqueOrte = [...new Set(events.map(event => event.location))];
-
-    res.status(200).json({ orte: uniqueOrte });
-  } catch (error: any) {
-    console.error("Fehler beim Abrufen der Orte:", error.message);
-    res.status(500).json({ message: "Ein unerwarteter Fehler ist aufgetreten", error });
-    next(error);
-  }
-};
-
-// READ: Filter Kategorien nach Ort
-export const getAllKategorienByOrt = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const { ort } = req.body; // Ort aus dem Body extrahieren
-
-    // Validierung: Ist der Ort vorhanden?
-    if (!ort) {
-      res.status(400).json({ message: "Ort ist erforderlich" });
-      return;
-    }
-
-    // Kategorien basierend auf dem Ort filtern
-    const events = await Event.find({ location: ort });
-
-    if (!events || events.length === 0) {
-      res.status(404).json({ message: `Keine Kategorien für den Ort ${ort} gefunden` });
-      return;
-    }
-
-    // Extrahiere die Kategorien und entferne Duplikate
-    const uniqueKategorien = [...new Set(events.map(event => event.category))];
-
-    res.status(200).json({ kategorien: uniqueKategorien });
-  } catch (error: any) {
-    console.error("Fehler beim Abrufen der Kategorien:", error.message);
-    res.status(500).json({ message: "Ein unerwarteter Fehler ist aufgetreten", error });
-    next(error);
-  }
-};
-
-// READ: Alle Orte abrufen (ohne Filter)
-export const getAllOrte = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const events = await Event.find(); // Alle Events abrufen
-
-    if (!events || events.length === 0) {
-      res.status(404).json({ message: "Keine Orte gefunden" });
-      return;
-    }
-
-    // Extrahiere die Orte und entferne Duplikate
-    const uniqueOrte = [...new Set(events.map(event => event.location))];
-
-    res.status(200).json({ orte: uniqueOrte });
-  } catch (error: any) {
-    console.error("Fehler beim Abrufen der Orte:", error.message);
-    res.status(500).json({ message: "Ein unerwarteter Fehler ist aufgetreten", error });
-    next(error);
-  }
-};
-
-// READ: Alle Kategorien abrufen (ohne Filter)
-export const getAllKategorien = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> => {
-  try {
-    const events = await Event.find(); // Alle Events abrufen
-
-    if (!events || events.length === 0) {
-      res.status(404).json({ message: "Keine Kategorien gefunden" });
-      return;
-    }
-
-    // Extrahiere die Kategorien und entferne Duplikate
-    const uniqueKategorien = [...new Set(events.map(event => event.category))];
-
-    res.status(200).json({ kategorien: uniqueKategorien });
-  } catch (error: any) {
-    console.error("Fehler beim Abrufen der Kategorien:", error.message);
-    res.status(500).json({ message: "Ein unerwarteter Fehler ist aufgetreten", error });
-    next(error);
-  }
-};
-*/
 // READ: Alle Orte und Kategorien basierend auf der Auswahl des Benutzers abrufen
 export const getKategorieUndOrt = async (
   req: Request,
