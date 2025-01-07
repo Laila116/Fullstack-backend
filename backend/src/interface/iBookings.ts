@@ -1,15 +1,10 @@
+import { ObjectId } from "mongoose";
+
 export interface iBookings {
-    bookingID: number; 
+    bookingID?: number; 
     useremail: string; 
-    eventID: number;   // (später)
+    eventID: ObjectId;
     numberOfTickets: number; 
     totalPrice: number; 
-    bookingDate: Date;
-}
-
-export interface iBookingCreationAttributes extends Partial<Pick<iBookings, 'bookingID' | 'bookingDate'>> {
-    useremail: string;
-    eventID: number;
-    numberOfTickets: number;
-    totalPrice: number;
+    bookingDate?: Date;
 }

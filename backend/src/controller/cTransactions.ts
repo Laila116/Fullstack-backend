@@ -1,9 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import Transaction from '../databaseSchema/postgresModels/mTransactions';
 import { iTransactions } from '../interface/iTransactions';
-
+/*
 // Funktion zum Erstellen einer neuen Transaktion
-async function createTransaction(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function createTransaction(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
         const { useremail, amount, type } = req.body;
 
@@ -28,7 +28,7 @@ async function createTransaction(req: Request, res: Response, next: NextFunction
 }
 
 // Funktion zum Abrufen einer Transaktion
-async function getTransaction(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function getTransaction(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
         const { transactionID } = req.body;
 
@@ -47,7 +47,7 @@ async function getTransaction(req: Request, res: Response, next: NextFunction): 
 }
 
 // Funktion zum Aktualisieren einer Transaktion
-async function updateTransaction(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function updateTransaction(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
         const { transactionID, useremail, amount, type } = req.body;
 
@@ -72,7 +72,7 @@ async function updateTransaction(req: Request, res: Response, next: NextFunction
 }
 
 // Funktion zum Löschen einer Transaktion
-async function deleteTransaction(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function deleteTransaction(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
         const { transactionID } = req.body;
 
@@ -90,6 +90,4 @@ async function deleteTransaction(req: Request, res: Response, next: NextFunction
         console.error('Fehler beim Löschen der Transaktion:', error.message);
         next(error);
     }
-}
-
-export { createTransaction, getTransaction, updateTransaction, deleteTransaction };
+}*/

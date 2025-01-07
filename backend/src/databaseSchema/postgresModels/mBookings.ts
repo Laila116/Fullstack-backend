@@ -1,12 +1,13 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../../databaseConnection/postgres.js';
-import { iBookings, iBookingCreationAttributes} from '../../interface/iBookings.js';
-import { Users } from './mUser.js';
+import { iBookings } from '../../interface/iBookings.js';
+import Users from './mUser.js';
+import { ObjectId } from "mongoose";
 
-class Bookings extends Model<iBookings, iBookingCreationAttributes> implements iBookings {
+class Bookings extends Model<iBookings> implements iBookings {
     public bookingID!: number;
     public useremail!: string;
-    public eventID!: number;
+    public eventID!: ObjectId;
     public numberOfTickets!: number;
     public totalPrice!: number;
     public bookingDate!: Date;
@@ -29,7 +30,7 @@ class Bookings extends Model<iBookings, iBookingCreationAttributes> implements i
         onDelete: 'CASCADE', //wenn User löschen = Buchung löschen!
     },
       eventID: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
       },
       numberOfTickets: {

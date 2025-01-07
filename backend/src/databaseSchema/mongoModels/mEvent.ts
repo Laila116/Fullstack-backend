@@ -8,6 +8,10 @@ const eventSchema: Schema<IEvent> = new Schema(
       type: String,
       required: true,
     },
+    category: {
+      type: String,
+      required: true,
+    },
     date: {
       type: Date,
       required: true,
@@ -20,6 +24,10 @@ const eventSchema: Schema<IEvent> = new Schema(
       type: String,
       required: false, // Optional
     },
+    imageUrl: { 
+      type: String ,
+      required: true,
+    }, 
   },
   {
     timestamps: true, // Fügt automatisch createdAt und updatedAt hinzu

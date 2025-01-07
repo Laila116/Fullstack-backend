@@ -1,9 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import EventCosts from '../databaseSchema/postgresModels/mEventCosts';
-// import eventDetails 
-
+/*
 // Funktion zum Erstellen eines neuen EventCosts
-async function createEventCost(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function createEventCost(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
         const { eventID, ticketCost } = req.body; 
 
@@ -27,7 +26,7 @@ async function createEventCost(req: Request, res: Response, next: NextFunction):
 }
 
 // Funktion zum Abrufen eines EventCosts
-async function getEventCost(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function getEventCost(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
         const id = req.query.id as string; // ID aus Query-Parameter
 
@@ -51,7 +50,7 @@ async function getEventCost(req: Request, res: Response, next: NextFunction): Pr
 }
 
 // Funktion zum Aktualisieren eines EventCosts
-async function updateEventCost(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function updateEventCost(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
         const { id, eventID, ticketCost } = req.body; // ID aus dem Body
 
@@ -80,7 +79,7 @@ async function updateEventCost(req: Request, res: Response, next: NextFunction):
 }
 
 // Funktion zum Löschen eines EventCosts
-async function deleteEventCost(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function deleteEventCost(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
         const { id } = req.body; // ID aus dem Body
 
@@ -104,5 +103,4 @@ async function deleteEventCost(req: Request, res: Response, next: NextFunction):
         next(error);
     }
 }
-
-export { createEventCost, getEventCost, updateEventCost, deleteEventCost };
+    */

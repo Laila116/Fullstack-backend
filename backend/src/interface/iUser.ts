@@ -7,4 +7,5 @@ export interface UserData {
     birthday: Date;
     balance: number;
     role:string;
+    companyName?: string;
 }

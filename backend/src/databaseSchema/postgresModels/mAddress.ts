@@ -1,8 +1,7 @@
 import { sequelize } from '../../databaseConnection/postgres.js';
 import { Model, DataTypes } from 'sequelize';
 import { AddressAttributes} from '../../interface/iAddress.js';
-
-import { Users } from './mUser.js';
+import Users from './mUser.js';
 
 class Address extends Model<AddressAttributes> implements AddressAttributes{
     public addresseId?: number;
@@ -12,6 +11,7 @@ class Address extends Model<AddressAttributes> implements AddressAttributes{
     public street!: string;      // Straße
     public houseNumber!: string; // Hausnummer
 
+    /*
     public static async createAddress(addressData: AddressAttributes): Promise<AddressAttributes> {
         try {
             const newAddress = await Address.create(
@@ -30,6 +30,7 @@ class Address extends Model<AddressAttributes> implements AddressAttributes{
         throw new Error('Failed to create user and address. Please try again later.');
         }
     }
+    */
 }
 
 Address.init(
@@ -74,4 +75,4 @@ Address.init(
 );
 
 
-export { Address };
+export default Address;

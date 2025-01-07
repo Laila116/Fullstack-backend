@@ -1,10 +1,9 @@
-export interface iEventCosts {
-    eventID: number;
-    ticketCost: number;
-    eventName: string;
-}
+import { ObjectId } from "mongoose";
 
-export interface iEventCostsCreationAttributes extends Partial<Pick<iEventCosts, 'eventName'>> {
-    eventID: number;
+export interface iEventCosts {
+    eventID: ObjectId;
     ticketCost: number;
+    ticketBeschreibung: string;
+    maxTickets: number;
+    verfuegbarTickets: number;
 }

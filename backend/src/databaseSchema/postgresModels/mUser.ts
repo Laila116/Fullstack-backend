@@ -11,6 +11,7 @@ class Users extends Model<UserData> implements UserData{
   public password!: string;
   public balance!: number;
   public role!: string;
+  public companyName?: string;
 }
 
 Users.init(
@@ -52,6 +53,10 @@ Users.init(
     role:{
       type: DataTypes.STRING(20),
       allowNull: false,
+    },
+    companyName:{
+      type: DataTypes.STRING(20),
+      allowNull: true,
     }
   },
   {
@@ -61,4 +66,4 @@ Users.init(
   }
 );
 
-export { Users };
+export default Users ;
