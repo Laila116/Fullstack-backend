@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   # Node.js Backend
@@ -7,17 +7,17 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"   # Exponiert den Port 3000 des Containers auf Port 3000 deines Hosts
+      - "3000:3000" # Exponiert den Port 3000 des Containers auf Port 3000 deines Hosts
     #environment:      # Definiert Umgebungsvariablen für die Verbindung zur PostgreSQL- und MongoDB-Datenbank
     #  - DATABASE_URL=postgres://user:password@postgres-db:5432/eventdb
     #  - MONGO_URI=mongodb://mongo-db:27017/event-comments
-    depends_on:       # stellt sciher das die vor Backend-Container gestartet werden
+    depends_on: # stellt sciher das die vor Backend-Container gestartet werden
       - postgres-db
       - mongo-db
     #volumes:
-      #- ./backend:/app       # Mountet den gesamten 'backend'-Ordner in den Container
-      #Entkommentiere dies, wenn du die 'dist'-Dateien mounten willst (für Entwicklung)
-      #- ./backend/dist:/app/dist
+    #- ./backend:/app       # Mountet den gesamten 'backend'-Ordner in den Container
+    #Entkommentiere dies, wenn du die 'dist'-Dateien mounten willst (für Entwicklung)
+    #- ./backend/dist:/app/dist
     #command: ["npm", "run", "start"]  # Startet die Anwendung, wenn der Container hochfährt
 
   # PostgreSQL Database
@@ -26,16 +26,16 @@ services:
     container_name: postgresdb
     ports:
       - "5432:5432"
-    environment:        # Definiert Standardwerte für den PostgreSQL-Benutzer, das Passwort und die Datenbank
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+    environment: # Definiert Standardwerte für den PostgreSQL-Benutzer, das Passwort und die Datenbank
+      POSTGRES_USER: AdminUser
+      POSTGRES_PASSWORD: AdminPassword
       POSTGRES_DB: eventdb
     volumes:
-          - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   # MongoDB Database
   mongo-db:
-    image: mongo:6
+    image: mongo:latest
     container_name: mongodb
     ports:
       - "27017:27017"
