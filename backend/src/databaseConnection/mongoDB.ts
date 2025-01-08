@@ -1,10 +1,9 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config({ path: '../.env' });
 
 //const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/mydatabase';
-const MONGO_URI =
-  process.env.MONGO_URI || "mongodb://localhost:27017/mongo_eventdb";
+const MONGO_URI = process.env.MONGO_URI || "mongodb://localhost:27017/mongo_eventdb";
 
 async function connectToMongoDB(): Promise<boolean> {
   try {

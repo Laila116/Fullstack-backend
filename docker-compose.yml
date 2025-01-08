@@ -7,7 +7,9 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000" # Exponiert den Port 3000 des Containers auf Port 3000 deines Hosts
+      - "${PORT}:${PORT}" # Exponiert den Port 3000 des Containers auf Port 3000 deines Hosts
+    env_file:
+      - .env  # Verweist auf die .env-Datei im selben Verzeichnis wie die docker-compose.yml
     #environment:      # Definiert Umgebungsvariablen für die Verbindung zur PostgreSQL- und MongoDB-Datenbank
     #  - DATABASE_URL=postgres://user:password@postgres-db:5432/eventdb
     #  - MONGO_URI=mongodb://mongo-db:27017/event-comments
@@ -25,11 +27,13 @@ services:
     image: postgres:15
     container_name: postgresdb
     ports:
-      - "5432:5432"
+      - "${PG_PORT}:${PG_PORT}"
+    env_file:
+      - .env  # Verweist auf die .env-Datei im selben Verzeichnis wie die docker-compose.yml
     environment: # Definiert Standardwerte für den PostgreSQL-Benutzer, das Passwort und die Datenbank
-      POSTGRES_USER: AdminUser
-      POSTGRES_PASSWORD: AdminPassword
-      POSTGRES_DB: eventdb
+      POSTGRES_USER: ${PG_USER}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: ${PG_NAME}
     volumes:
       #- ./postgres/data:/var/lib/postgresql/data  # Persistente Speicherung der Daten
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -39,12 +43,15 @@ services:
     image: mongo:latest
     container_name: mongodb
     ports:
-      - "27017:27017"
+      - "${MONGO_PORT}:${MONGO_PORT}"
+    env_file:
+      - .env  # Verweist auf die .env-Datei im selben Verzeichnis wie die docker-compose.yml
+    environment:
+      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
     volumes:
       - ./mongodb/mockData.js:/docker-entrypoint-initdb.d/mockData.js
       #- ./mongodb:/data/db  # Persistente Speicherung der MongoDB-Daten
-    environment:
-      MONGO_INITDB_DATABASE: mongo_eventdb
+    
 
 #volumes:
 #  postgres_data:  # Definiert das Docker-Volume für PostgreSQL-Daten
