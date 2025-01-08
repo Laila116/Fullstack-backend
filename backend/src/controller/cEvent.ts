@@ -237,11 +237,11 @@ export const getSelectedEventData = async (
     }
 
     // Alle Feedbacks für dieses Event abrufen
-    const feedbacks = await Feedback.find({ eventID });
+    const feedback = await Feedback.find({ eventID });
     
     // Durchschnitt der Feedback-Bewertungen berechnen
-    const totalFeedback = feedbacks.reduce((sum, feedback) => sum + feedback.feedback, 0);
-    const averageFeedback = feedbacks.length > 0 ? totalFeedback / feedbacks.length : 0;
+    const totalFeedback = feedback.reduce((sum, feedback) => sum + feedback.feedback, 0);
+    const averageFeedback = feedback.length > 0 ? totalFeedback / feedback.length : 0;
 
     // Ticket-Kosten für dieses Event abrufen
     const eventCosts = await EventCosts.findAll({
@@ -257,9 +257,9 @@ export const getSelectedEventData = async (
         date: event.date,
         imageUrl: event.imageUrl || null  // Bild-URL, falls vorhanden
       },
-      feedbacks: {
+      feedback: {
         average: averageFeedback.toFixed(1), // Durchschnitt der Feedback-Bewertungen
-        comments: feedbacks.map((feedback) => ({
+        comments: feedback.map((feedback) => ({
           userEmail: feedback.userEmail,
           comment: feedback.comment,
         })),

@@ -31,6 +31,7 @@ services:
       POSTGRES_PASSWORD: AdminPassword
       POSTGRES_DB: eventdb
     volumes:
+      #- ./postgres/data:/var/lib/postgresql/data  # Persistente Speicherung der Daten
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   # MongoDB Database
@@ -39,5 +40,12 @@ services:
     container_name: mongodb
     ports:
       - "27017:27017"
-    #volumes:
-    #  - ./datenbank/mongo:/data/db   # Persistente Speicherung von MongoDB-Daten
+    volumes:
+      - ./mongodb/mockData.js:/docker-entrypoint-initdb.d/mockData.js
+      #- ./mongodb:/data/db  # Persistente Speicherung der MongoDB-Daten
+    environment:
+      MONGO_INITDB_DATABASE: mongo_eventdb
+
+#volumes:
+#  postgres_data:  # Definiert das Docker-Volume für PostgreSQL-Daten
+#  mongo_data:     # Definiert das Docker-Volume für MongoDB-Daten

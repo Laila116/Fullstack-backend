@@ -19,7 +19,7 @@ async function connectToDatabase(): Promise<Boolean> {
   try {
     await sequelize.authenticate();
     console.log('Connected to PostgreSQL');
-    await sequelize.sync({ force: true }); // force: true erzwingt das Neu-Erstellen aller Tabellen
+    await sequelize.sync(); // force: true erzwingt das Neu-Erstellen aller Tabellen
     return true;
   } catch (authError) {
     console.error('Fehler beim Authentifizieren zur PostrgesDB');

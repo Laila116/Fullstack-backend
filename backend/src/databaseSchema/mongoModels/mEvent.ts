@@ -42,7 +42,7 @@ const eventSchema: Schema<IEvent> = new Schema(
 eventSchema.index({ name: 1, date: 1 }, { unique: true });
 
 // Erstelle das Event-Modell
-const Event: Model<IEvent> = mongoose.model<IEvent>("Event", eventSchema);
+const Event: Model<IEvent> = mongoose.model<IEvent>("event", eventSchema);
 
 // Exportiere das Modell
 export default Event;

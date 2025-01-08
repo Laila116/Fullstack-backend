@@ -29,6 +29,6 @@ const FeedbackSchema: Schema<IFeedback> = new Schema(
 );
 
 // Exportiere das Feedback-Modell
-const Feedback: Model<IFeedback> = mongoose.model<IFeedback>('Feedback', FeedbackSchema);
+const Feedback: Model<IFeedback> = mongoose.model<IFeedback>('feedback', FeedbackSchema);
 
 export default Feedback;

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import Feedback from '../databaseSchema/mongoModels/mFeedback';
 import Users from '../databaseSchema/postgresModels/mUser'; 
-import Events  from '../databaseSchema/mongoModels/mEvent';
+import Event  from '../databaseSchema/mongoModels/mEvent';
 import mongoose from 'mongoose';
 
 export async function createFeedback(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -10,7 +10,7 @@ export async function createFeedback(req: Request, res: Response, next: NextFunc
         console.log( eventID, userEmail, feedback, comment);
 
         // Überprüfen, ob die eventID existiert
-        const eventExists = await Events.findOne({ _id: new mongoose.Types.ObjectId(eventID) });
+        const eventExists = await Event.findOne({ _id: new mongoose.Types.ObjectId(eventID) });
         if (!eventExists) {
             res.status(400).json({ message: 'Event-ID existiert nicht' });
             return;
@@ -59,9 +59,9 @@ export async function getUserAllFeedback(req: Request, res: Response, next: Next
         }
 
         // Alle Feedbacks für die userEmail abrufen
-        const feedbacks = await Feedback.find({ userEmail });
+        const feedback = await Feedback.find({ userEmail });
 
-        res.status(200).json({ message: 'Alle Feedbacks erfolgreich abgerufen', feedbacks });
+        res.status(200).json({ message: 'Alle Feedbacks erfolgreich abgerufen', feedback });
     } catch (error: any) {
         console.error('Fehler beim Abrufen der Feedbacks:', error.message);
         res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.' });
