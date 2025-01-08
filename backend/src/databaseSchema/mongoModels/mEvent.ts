@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document, Model } from "mongoose";
+import mongoose, { Schema, Model } from "mongoose";
 import { IEvent } from "../../interface/iEvent";
 
 // Definiere das Event-Schema
@@ -25,6 +25,10 @@ const eventSchema: Schema<IEvent> = new Schema(
       required: false, // Optional
     },
     imageUrl: { 
+      type: String ,
+      required: true,
+    }, 
+    VeranstalterEmail: { 
       type: String ,
       required: true,
     }, 

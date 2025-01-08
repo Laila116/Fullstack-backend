@@ -7,4 +7,5 @@ export interface IEvent extends Document {
   location: string;
   description?: string; // Optional
   imageUrl:string;
+  VeranstalterEmail:string;
 }
