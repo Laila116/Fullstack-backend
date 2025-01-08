@@ -1,5 +1,5 @@
 import mongoose, { Schema, Model } from "mongoose";
-import { IEvent } from "../../interface/iEvent";
+import { IEvent } from "../../../../shared/interface/iEvent";
 
 // Definiere das Event-Schema
 const eventSchema: Schema<IEvent> = new Schema(

@@ -1,5 +1,5 @@
 import mongoose, { Schema, Model } from 'mongoose';
-import { IFeedback } from "../../interface/iFeedback";
+import { IFeedback } from "../../../../shared/interface/iFeedback";
 
 
 const FeedbackSchema: Schema<IFeedback> = new Schema(

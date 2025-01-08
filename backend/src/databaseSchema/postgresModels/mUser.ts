@@ -1,6 +1,6 @@
 import { sequelize } from '../../databaseConnection/postgres.js';
 import { Model, DataTypes } from 'sequelize';
-import { UserData} from '../../interface/iUser.js';
+import { UserData} from '../../../../shared/interface/iUser.js';
 
 class Users extends Model<UserData> implements UserData{
   public firstname!: string;
