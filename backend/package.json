@@ -9,9 +9,9 @@
   "scripts": {
     "build": "rimraf ./dist && npx tsc",
     "prestart": "npm run build",
-    "start": "node ./dist/server.js",
+    "start": "node ./dist/backend/src/server.js",
     "predev": "npm run build",
-    "dev": "concurrently \"npx tsc -w\"  \"nodemon ./dist/server.js\""
+    "dev": "concurrently \"npx tsc -w\"  \"nodemon ./dist/backend/src/server.js\""
   },
   "dependencies": {
     "cors": "^2.8.5",
