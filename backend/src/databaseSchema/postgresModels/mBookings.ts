@@ -50,7 +50,7 @@ class Bookings extends Model<iBookings> implements iBookings {
     {
       sequelize,
       modelName: 'Booking',
-      tableName: 'Bookings',
+      tableName: 'booking',
       timestamps: false,
     }
   );

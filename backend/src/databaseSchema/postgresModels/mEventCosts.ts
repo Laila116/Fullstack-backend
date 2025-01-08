@@ -39,7 +39,7 @@ EventCosts.init(
   {
       sequelize,
       modelName: 'EventCosts',
-      tableName: 'EventCosts',
+      tableName: 'eventCosts',
       timestamps: false,
   }
 );

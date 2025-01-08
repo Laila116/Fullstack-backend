@@ -1,10 +1,15 @@
 import { Sequelize } from 'sequelize';
+import dotenv from 'dotenv';
+dotenv.config({ path: '../.env' });
 
-const host = process.env.DATABASE_HOST || 'localhost';
-
-const sequelize = new Sequelize('eventdb', 'AdminUser', 'AdminPassword', { //von Compose datei für verbindung
-  host: host,
-  port: 5432,
+const dbName = process.env.PG_NAME || 'postgre_eventdb';
+const dbUser = process.env.PG_USER || 'AdminUser';
+const dbPassword = process.env.PG_PASSWORD || 'AdminPassword';
+const dbHost = process.env.DATABASE_HOST || 'localhost';
+const dbPort = parseInt(process.env.PG_PORT || '5432', 10);
+const sequelize = new Sequelize(dbName, dbUser, dbPassword, { //von Compose datei für verbindung
+  host: dbHost,
+  port: dbPort,
   dialect: 'postgres',
   dialectOptions: {
     connectTimeout: 60000 
@@ -19,7 +24,7 @@ async function connectToDatabase(): Promise<Boolean> {
   try {
     await sequelize.authenticate();
     console.log('Connected to PostgreSQL');
-    await sequelize.sync({ force: true }); // force: true erzwingt das Neu-Erstellen aller Tabellen
+    await sequelize.sync(); // force: true erzwingt das Neu-Erstellen aller Tabellen
     return true;
   } catch (authError) {
     console.error('Fehler beim Authentifizieren zur PostrgesDB');

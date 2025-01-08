@@ -49,7 +49,7 @@ Address.init(
   {
       sequelize,
       modelName: 'Address',
-      tableName: 'Address',
+      tableName: 'addressUser',
   }
 );
 

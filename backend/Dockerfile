@@ -6,6 +6,7 @@ WORKDIR /app
 
 # Kopiert package.json und installiert die abhängigkeiten davon
 #COPY package*.json ./
+COPY ../.env /app/.env
 COPY . .
 
 RUN npm install
@@ -20,11 +21,16 @@ RUN npm install
 
 RUN npm run build
 
-ENV DATABASE_HOST=postgres-db
+#ENV DATABASE_HOST=postgres-db
 
+# Nutzt .env-Variable zur Laufzeit
+ARG PORT
+ENV PORT=${PORT}
+
+EXPOSE ${PORT}
 
 # Öffnet den Port für die Anwendung
-EXPOSE 3000
+#EXPOSE 3000
 
 # Startet die Anwendung mit dem skript
 CMD ["npm", "run", "start"]
