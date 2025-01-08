@@ -2,7 +2,7 @@ import express from 'express';
 import {createUser, getUserData, updateUserData, deleteUser, getUserGuthaben, putUserGuthaben, loginUser } from '../controller/cUser.js';
 import { createFeedback, getUserAllFeedback } from '../controller/cFeedback.js';
 import { createBooking, getUserAllBooking } from '../controller/cBookings.js';
-import { createEvent, getAllEvents, updateEvent, deleteEvent, getSelectedEventData, getAllEventsByKategorieUndOrt, getKategorieUndOrt} from "../controller/cEvent.js";
+import { createEvent, getAllEvents, updateEvent, deleteEvent, getSelectedEventData, getAllEventsByKategorieUndOrt, getKategorieUndOrt, getEventsByVeranstalter} from "../controller/cEvent.js";
 
 const router = express.Router();
 // Frontend Wichtige EndPunkte
@@ -40,5 +40,6 @@ router.post('/user/createEvent',            createEvent); // veranstallung mit d
 router.post('/feedback/createFeedback', createFeedback);
 router.put("/events/updateEvent", updateEvent);
 router.delete("/events/deleteEvent", deleteEvent); // löscht auch event cost
+router.get("/user/getEventsByVeranstalter", getEventsByVeranstalter); // gibt die evnts pro veranstalter
 
 export { router };

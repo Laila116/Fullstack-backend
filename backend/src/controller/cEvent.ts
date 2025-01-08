@@ -27,7 +27,7 @@ export const createEvent = async (
     }
 
     // Event erstellen
-    const newEvent = await Event.create({ name, category, date, location, description, imageUrl });
+    const newEvent = await Event.create({ name, category, date, location, description, imageUrl, VeranstalterEmail:userEmail });
 
     
     // Überprüfen, ob die Ticketdetails bereitgestellt wurden
@@ -117,6 +117,22 @@ export const updateEvent = async (
   }
 
   try {
+    // Event aus der Datenbank abrufen, um die Veranstalter-E-Mail zu überprüfen
+    const event = await Event.findById(id);
+
+    if (!event) {
+      res.status(404).json({ message: "Event nicht gefunden 😟" });
+      return;
+    }
+
+    // Überprüfen, ob der Benutzer der Veranstalter des Events ist
+    if (event.VeranstalterEmail !== userEmail) {
+      res
+        .status(403)
+        .json({ message: "Sie sind nicht der Veranstalter dieses Events!" });
+      return;
+    }
+
     const updatedEvent = await Event.findByIdAndUpdate(
       id,
       { name, category, date, location, description, imageUrl },
@@ -164,6 +180,22 @@ export const deleteEvent = async (
       res.status(400).json({ message: "Event-ID ist erforderlich" });
       return;
     }
+    // Event aus der Datenbank abrufen, um die Veranstalter-E-Mail zu überprüfen
+    const event = await Event.findById(id);
+
+    if (!event) {
+      res.status(404).json({ message: "Event nicht gefunden 😟" });
+      return;
+    }
+
+    // Überprüfen, ob der Benutzer der Veranstalter des Events ist
+    if (event.VeranstalterEmail !== userEmail) {
+      res
+        .status(403)
+        .json({ message: "Sie sind nicht der Veranstalter dieses Events!" });
+      return;
+    }
+
     // Versuche, das Event zu finden und zu löschen
     const deletedEvent = await Event.findByIdAndDelete(id);
     if (!deletedEvent) {
@@ -322,6 +354,38 @@ export const getKategorieUndOrt = async (
   } catch (error: any) {
     console.error("Fehler beim Abrufen der gefilterten Orte und Kategorien:", error.message);
     res.status(500).json({ message: "Ein Fehler ist aufgetreten", error });
+    next(error);
+  }
+};
+
+// GET: Alle Events eines Veranstalters
+export const getEventsByVeranstalter = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  const { email } = req.body; // Veranstalter-E-Mail aus der Query-Parameter abrufen
+
+  if (!email) {
+    res.status(400).json({ message: "Veranstalter-E-Mail ist erforderlich!" });
+    return;
+  }
+
+  try {
+    // Events abrufen, die zur angegebenen E-Mail-Adresse gehören
+    const events = await Event.find({ VeranstalterEmail: email });
+
+    if (events.length === 0) {
+      res
+        .status(404)
+        .json({ message: "Keine Events für diesen Veranstalter gefunden!" });
+      return;
+    }
+
+    res.status(200).json({ message: "Events erfolgreich abgerufen!", events });
+  } catch (error: any) {
+    console.error("Fehler beim Abrufen der Events:", error.message);
+    res.status(500).json({ message: error.message });
     next(error);
   }
 };
