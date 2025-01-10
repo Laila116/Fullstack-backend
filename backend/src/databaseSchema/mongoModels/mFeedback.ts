@@ -17,7 +17,7 @@ const FeedbackSchema: Schema<IFeedback> = new Schema(
                     return Number.isInteger(value * 10);
                 },
                 message: (props: { value: number; path: string }) =>
-                    `${props.value} ist kein gültiger Feedback-Wert. Erlaubte Werte sind in 0.1-Schritten zwischen 1.0 und 5.0.`,
+                    '${props.value} ist kein gültiger Feedback-Wert. Erlaubte Werte sind in 0.1-Schritten zwischen 1.0 und 5.0.',
             },
         },
         comment: { type: String, required: false },

@@ -1,64 +1,57 @@
-import { Request, Response, NextFunction } from 'express';
-import Feedback from '../databaseSchema/mongoModels/mFeedback';
-import Users from '../databaseSchema/postgresModels/mUser'; 
-import Event  from '../databaseSchema/mongoModels/mEvent';
-import mongoose from 'mongoose';
+import { Request, Response, NextFunction } from "express";
+import Feedback from "../databaseSchema/mongoModels/mFeedback";
+import Users from "../databaseSchema/postgresModels/mUser"; 
+import Event  from "../databaseSchema/mongoModels/mEvent";
 
 export async function createFeedback(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
         const { eventID, userEmail, feedback, comment } = req.body;
-        console.log( eventID, userEmail, feedback, comment);
+        if (!eventID || !userEmail || !feedback || !comment) {
+            res.status(400).json({ error: 'Missing required fields' });
+            return;
+        }
 
-        // Überprüfen, ob die eventID existiert
-        const eventExists = await Event.findOne({ _id: new mongoose.Types.ObjectId(eventID) });
+        const eventExists = await Event.findOne({ _id: eventID });
         if (!eventExists) {
             res.status(400).json({ message: 'Event-ID existiert nicht' });
             return;
         }
 
-        // Überprüfen, ob die userEmail existiert
         const userExists = await Users.findOne({ where: { email: userEmail } });
         if (!userExists) {
             res.status(400).json({ message: 'Benutzer-E-Mail existiert nicht' });
             return;
         }
         
-        const feedbackData = {
+        const feedbackData = await Feedback.create({
             eventID,
             userEmail,
             feedback,
             comment
-        };
+        });        
 
-        const newFeedback = new Feedback(feedbackData);
-        
-        await newFeedback.save();
-
-        res.status(201).json({ message: 'Feedback erfolgreich erstellt', user: feedbackData });
-        
+        res.status(201).json({ message: 'Feedback erfolgreich erstellt', feedback: feedbackData });
     } catch (error:any) {
         console.error('Fehler beim Erstellen eines Nutzers:', error.message);
+        res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.' });
         next(error);
     }
 }
 
 export async function getUserAllFeedback(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-        const userEmail = req.body.email as string;
-
+        const userEmail = req.body.email;
         if (!userEmail) {
             res.status(400).json({ error: 'Email is missing' });
             return;
         }
 
-        // Überprüfen, ob die userEmail existiert
         const userExists = await Users.findOne({ where: { email: userEmail } });
         if (!userExists) {
             res.status(400).json({ message: 'Benutzer-E-Mail existiert nicht' });
             return;
         }
 
-        // Alle Feedbacks für die userEmail abrufen
         const feedback = await Feedback.find({ userEmail });
 
         res.status(200).json({ message: 'Alle Feedbacks erfolgreich abgerufen', feedback });
