@@ -8,13 +8,13 @@ export async function createEvent ( req: Request, res: Response, next: NextFunct
     try {
         const { name, category, date, location, description, imageUrl, ticketDetails, userEmail } = req.body;
         if (!name || !category || !date || !location || !description || !imageUrl || !ticketDetails || !userEmail) {
-            res.status(400).json({ error: 'Missing required fields' });
+            res.status(400).json({ error: 'Fehlende Pflichtfelder: name, category, date, location, description, imageUrl, ticketDetails, userEmail' });
             return;
         }
         
         const user = await Users.findOne({ where: { email: userEmail } });
         if (!user) {
-            res.status(404).json({ message: "Benutzer nicht gefunden" });
+            res.status(404).json({ message: `Benutzer mit der angegebenen E-Mail-Adresse ${userEmail} nicht gefunden` });
             return;
         }
 
@@ -23,9 +23,9 @@ export async function createEvent ( req: Request, res: Response, next: NextFunct
             return;
         }
 
-        const newEvent = await Event.create({ name, category, date, location, description, imageUrl, VeranstalterEmail:userEmail });
+        const newEvent = await Event.create({ name, category, date, location, description, imageUrl, VeranstalterEmail: userEmail });
         if (!ticketDetails || !Array.isArray(ticketDetails) || ticketDetails.length !== 3) {
-            res.status(400).json({message:"Bitte geben Sie genau drei Ticketarten an."});
+            res.status(400).json({ message: "Bitte geben Sie genau drei Ticketarten an." });
             return;
         }
 
@@ -39,7 +39,7 @@ export async function createEvent ( req: Request, res: Response, next: NextFunct
 
         await EventCosts.bulkCreate(eventCosts);
 
-        res.status(201).json({ message: "Event erfolgreich hinzugefügt 😊", event: newEvent });
+        res.status(201).json({ message: "Event erfolgreich hinzugefügt", event: newEvent });
     } catch (error: any) {
         console.error("Fehler beim Hinzufügen des Events", error.message);
         res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.' });
@@ -52,7 +52,7 @@ export async function getAllEvents ( req: Request, res: Response, next: NextFunc
         const events = await Event.find();
 
         if (!events || events.length === 0) {
-            res.status(404).json({ message: "Kein Event wurde gefunden" });
+            res.status(404).json({ message: "Es wurden keine Events gefunden" });
             return;
         }
 
@@ -74,24 +74,24 @@ export async function updateEvent ( req: Request, res: Response, next: NextFunct
     try {
         const { id, name, category, date, location, description, imageUrl, userEmail } = req.body;
         if (!id || !name || !category || !date || !location || !description || !imageUrl || !userEmail) {
-            res.status(400).json({ error: 'Missing required fields' });
+            res.status(400).json({ error: 'Fehlende Pflichtfelder: id, name, category, date, location, description, imageUrl, userEmail' });
             return;
         }
 
         const user = await Users.findOne({ where: { email: userEmail } });
         if (!user) {
-            res.status(404).json({ message: "Benutzer nicht gefunden" });
+            res.status(404).json({ message: `Benutzer mit der angegebenen E-Mail-Adresse ${userEmail} nicht gefunden` });
             return;
         }
 
         if (user.role !== "Veranstalter") {
-            res.status(403).json({ message: "Nur Veranstalter können Events updaten" });
+            res.status(403).json({ message: "Nur ein Veranstalter kann dieses Event aktualisieren" });
             return;
         }
 
         const event = await Event.findById(id);
         if (!event) {
-            res.status(404).json({ message: "Event nicht gefunden" });
+            res.status(404).json({ message: "Kein Event mit der angegebenen ID gefunden" });
             return;
         }
 
@@ -100,9 +100,9 @@ export async function updateEvent ( req: Request, res: Response, next: NextFunct
             return;
         }
 
-        const updatedEvent = await Event.findByIdAndUpdate( id, { name, category, date, location, description, imageUrl }, { new: true, runValidators: true });
+        const updatedEvent = await Event.findByIdAndUpdate(id, { name, category, date, location, description, imageUrl }, { new: true, runValidators: true });
         if (!updatedEvent) {
-            res.status(404).json({ message: "Event nicht gefunden" });
+            res.status(404).json({ message: "Event konnte nicht aktualisiert werden" });
             return;
         }
 
@@ -116,26 +116,26 @@ export async function updateEvent ( req: Request, res: Response, next: NextFunct
 
 export async function deleteEvent ( req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-        const { id, userEmail  } = req.body; 
+        const { id, userEmail } = req.body;
         if (!id || !userEmail) {
-            res.status(400).json({ error: 'Missing required fields' });
+            res.status(400).json({ error: 'Fehlende Pflichtfelder: id, userEmail' });
             return;
         }
 
         const user = await Users.findOne({ where: { email: userEmail } });
         if (!user) {
-            res.status(404).json({ message: "Benutzer nicht gefunden" });
+            res.status(404).json({ message: `Benutzer mit der E-Mail-Adresse ${userEmail} nicht gefunden` });
             return;
         }
     
         if (user.role !== "Veranstalter") {
-            res.status(403).json({ message: "Nur Veranstalter können Events löschen" });
+            res.status(403).json({ message: "Nur ein Veranstalter kann dieses Event löschen" });
             return;
         }
 
         const event = await Event.findById(id);
         if (!event) {
-            res.status(404).json({ message: "Event nicht gefunden" });
+            res.status(404).json({ message: "Kein Event mit der angegebenen ID gefunden" });
             return;
         }
 
@@ -146,17 +146,17 @@ export async function deleteEvent ( req: Request, res: Response, next: NextFunct
 
         const deletedEvent = await Event.findByIdAndDelete(id);
         if (!deletedEvent) {
-            res.status(404).json({ message: "Event nicht gefunden" });
+            res.status(404).json({ message: "Event konnte nicht gelöscht werden" });
             return;
         }
         
-        const deletedEventCosts = await EventCosts.destroy({where: { eventID: id }});
+        const deletedEventCosts = await EventCosts.destroy({ where: { eventID: id } });
         if (deletedEventCosts === 0) {
-            res.status(404).json({ message: 'Event costs not found' });
+            res.status(404).json({ message: 'Keine Event-Kosten gefunden' });
             return;
         }
 
-        res.status(200).json({message: "Event und zugehörige Kosten erfolgreich gelöscht",event: deletedEvent, deletedCostsCount: deletedEventCosts});
+        res.status(200).json({ message: "Event und zugehörige Kosten erfolgreich gelöscht", event: deletedEvent, deletedCostsCount: deletedEventCosts });
     } catch (error: any) {
         console.error("Fehler beim Löschen des Events:", error.message);
         res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.' });
@@ -168,28 +168,28 @@ export async function getSelectedEventData ( req: Request, res: Response, next: 
     try {
         const eventID = req.body.eventID;
         if (!eventID) {
-            res.status(400).json({ error: 'EventID is missing' });
+            res.status(400).json({ error: 'EventID ist erforderlich' });
             return;
         }
 
         const event = await Event.findById(eventID);
         if (!event) {
-            res.status(404).json({ message: "Event nicht gefunden" });
+            res.status(404).json({ message: `Kein Event mit der ID ${eventID} gefunden` });
             return;
         }
 
         const feedback = await Feedback.find({ eventID });
         if (!feedback || feedback.length === 0) {
-            res.status(404).json({ message: "Keine Feedbacks für dieses Event gefunden" });
+            res.status(404).json({ message: `Keine Feedbacks für das Event mit der ID ${eventID} gefunden` });
             return;
         }
         
         const totalFeedback = feedback.reduce((sum, feedback) => sum + feedback.feedback, 0);
         const averageFeedback = feedback.length > 0 ? totalFeedback / feedback.length : 0;
 
-        const eventCosts = await EventCosts.findAll({where: { eventID }});
+        const eventCosts = await EventCosts.findAll({ where: { eventID } });
         if (!eventCosts || eventCosts.length === 0) {
-            res.status(404).json({ message: "Keine Event-Kosten für dieses Event gefunden" });
+            res.status(404).json({ message: `Keine Event-Kosten für das Event mit der ID ${eventID} gefunden` });
             return;
         }
 
@@ -204,8 +204,8 @@ export async function getSelectedEventData ( req: Request, res: Response, next: 
             feedback: {
                 average: averageFeedback.toFixed(1), // Durchschnitt der Feedback-Bewertungen
                 comments: feedback.map((feedback) => ({
-                userEmail: feedback.userEmail,
-                comment: feedback.comment,
+                    userEmail: feedback.userEmail,
+                    comment: feedback.comment,
                 })),
             },
             ticketCosts: eventCosts.map((cost) => ({
@@ -227,7 +227,7 @@ export async function getAllEventsByKategorieUndOrt ( req: Request, res: Respons
     try {
         const { category, ort } = req.body; 
         if (!category && !ort) {
-            res.status(400).json({ message: "Kategorie oder Ort sind erforderlich" });
+            res.status(400).json({ message: "Bitte geben Sie entweder eine Kategorie oder einen Ort an." });
             return;
         }
 
@@ -238,7 +238,7 @@ export async function getAllEventsByKategorieUndOrt ( req: Request, res: Respons
         const events = await Event.find(filter);
         
         if (!events || events.length === 0) {
-            res.status(404).json({ message: "Keine Events gefunden." });
+            res.status(404).json({ message: "Keine Events gefunden für die angegebenen Filter" });
             return;
         }
 
@@ -260,7 +260,7 @@ export async function getKategorieUndOrt ( req: Request, res: Response, next: Ne
 
         const events = await Event.find(filter);
         if (!events || events.length === 0) {
-            res.status(404).json({ message: "Keine Events gefunden." });
+            res.status(404).json({ message: `Keine Events gefunden für die Kategorie ${kategorie} und den Ort ${ort}` });
             return;
         }
 
@@ -279,19 +279,19 @@ export async function getEventsByVeranstalter ( req: Request, res: Response, nex
     try {
         const email = req.body.email;
         if (!email) {
-            res.status(400).json({ error: 'Email is missing' });
+            res.status(400).json({ message: "E-Mail-Adresse des Veranstalters erforderlich" });
             return;
         }
 
         const events = await Event.find({ VeranstalterEmail: email });
-        if (events.length === 0) {
-            res.status(404).json({ message: "Keine Events für diesen Veranstalter gefunden!" });
+        if (!events || events.length === 0) {
+            res.status(404).json({ message: `Keine Events für den Veranstalter mit der E-Mail-Adresse ${email} gefunden` });
             return;
         }
 
         res.status(200).json({ message: "Events erfolgreich abgerufen!", events });
     } catch (error: any) {
-        console.error("Fehler beim Abrufen der Events:", error.message);
+        console.error("Fehler beim Abrufen der Veranstalter-Events:", error.message);
         res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.' });
         next(error);
     }

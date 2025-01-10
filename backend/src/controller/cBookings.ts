@@ -5,40 +5,40 @@ import Bookings from "../databaseSchema/postgresModels/mBookings";
 import Users from "../databaseSchema/postgresModels/mUser";
 import Event from "../databaseSchema/mongoModels/mEvent";
 
-export async function createBooking (req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function createBooking(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
         const { userEmail, eventID, ticketBeschreibung, numberOfTickets } = req.body;
         if (!userEmail || !eventID || !ticketBeschreibung || !numberOfTickets) {
-            res.status(400).json({ error: 'Missing required fields' });
+            res.status(400).json({ error: 'Die folgenden Felder sind erforderlich: userEmail, eventID, ticketBeschreibung, numberOfTickets.' });
             return;
         }
 
         const user = await Users.findOne({ where: { email: userEmail } });
         if (!user) {
-            res.status(404).json({ message: "Benutzer nicht gefunden" });
+            res.status(404).json({ message: "Benutzer mit der angegebenen E-Mail-Adresse nicht gefunden." });
             return;
         }
 
         const event = await Event.findById(eventID);
         if (!event) {
-            res.status(404).json({ message: "Event nicht gefunden" });
+            res.status(404).json({ message: "Das Event mit der angegebenen ID wurde nicht gefunden." });
             return;
         }
 
-        const eventCost = await EventCosts.findOne({where: { eventID, ticketBeschreibung }});
+        const eventCost = await EventCosts.findOne({ where: { eventID, ticketBeschreibung } });
         if (!eventCost) {
-            res.status(404).json({ message: "Ticket-Typ nicht gefunden" });
+            res.status(404).json({ message: "Tickettyp für das angegebene Event nicht gefunden." });
             return;
         }
 
         if (eventCost.verfuegbarTickets < numberOfTickets) {
-            res.status(400).json({ message: "Nicht genügend verfügbare Tickets" });
+            res.status(400).json({ message: `Nicht genügend verfügbare Tickets. Verfügbare Tickets: ${eventCost.verfuegbarTickets}` });
             return;
         }
 
         const totalPrice = eventCost.ticketCost * numberOfTickets;
         if (user.balance < totalPrice) {
-            res.status(400).json({ message: "Nicht genügend Guthaben" });
+            res.status(400).json({ message: `Nicht genügend Guthaben. Erforderlich: ${totalPrice}, Verfügbar: ${user.balance}` });
             return;
         }
 
@@ -51,20 +51,20 @@ export async function createBooking (req: Request, res: Response, next: NextFunc
 
             const booking = await Bookings.create(
                 {
-                useremail: userEmail,
-                eventID,
-                numberOfTickets,
-                totalPrice,
-                bookingDate: new Date(),
+                    useremail: userEmail,
+                    eventID,
+                    numberOfTickets,
+                    totalPrice,
+                    bookingDate: new Date(),
                 },
                 { transaction: t }
             );
 
-            res.status(201).json({message: "Buchung erfolgreich erstellt", booking});
+            res.status(201).json({ message: "Buchung erfolgreich erstellt.", booking });
         });
     } catch (error: any) {
         console.error("Fehler beim Erstellen der Buchung:", error.message);
-        res.status(500).json({ message: "Ein Fehler ist aufgetreten", error });
+        res.status(500).json({ message: "Ein Fehler ist beim Erstellen der Buchung aufgetreten. Bitte versuchen Sie es später erneut.", error });
         next(error);
     }
 }
@@ -73,26 +73,26 @@ export async function getUserAllBooking(req: Request, res: Response, next: NextF
     try {
         const userEmail = req.body.email;
         if (!userEmail) {
-            res.status(400).json({ error: 'Email is missing' });
+            res.status(400).json({ error: 'E-Mail-Adresse ist erforderlich.' });
             return;
         }
 
         const user = await Users.findOne({ where: { email: userEmail } });
         if (!user) {
-            res.status(404).json({ message: "Benutzer nicht gefunden" });
+            res.status(404).json({ message: "Benutzer mit der angegebenen E-Mail-Adresse nicht gefunden." });
             return;
         }
 
         const bookings = await Bookings.findAll({ where: { useremail: userEmail } });
         if (!bookings || bookings.length === 0) {
-            res.status(404).json({ message: 'Keine Buchungen für diesen Benutzer gefunden' });
+            res.status(404).json({ message: 'Es wurden keine Buchungen für den angegebenen Benutzer gefunden.' });
             return;
         }
 
-        res.status(200).json({ message: 'Alle Buchungen erfolgreich abgerufen', bookings });
+        res.status(200).json({ message: 'Alle Buchungen erfolgreich abgerufen.', bookings });
     } catch (error: any) {
         console.error('Fehler beim Abrufen der Buchungen:', error.message);
-        res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.' });
+        res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.', error });
         next(error);
     }
 }

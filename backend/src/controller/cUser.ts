@@ -6,13 +6,13 @@ import Feedback from "../databaseSchema/mongoModels/mFeedback";
 export async function createUser(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
         const { email, password, firstname, surname, phone, birthday, role, companyName, city, postcode, street, houseNumber } = req.body;
-        if (!email || !password || !firstname || !surname || !phone || !birthday || !role || !city || !postcode || !street || ! houseNumber) {
+        if (!email || !password || !firstname || !surname || !phone || !birthday || !role || !city || !postcode || !street || !houseNumber) {
             res.status(400).json({ error: 'Missing required fields' });
             return;
         }
 
-        const user = await Users.findOne ({ where: { email: email } });
-        if (user){
+        const user = await Users.findOne({ where: { email: email } });
+        if (user) {
             res.status(409).json({ error: 'User already exists' });
             return;
         }
@@ -38,7 +38,7 @@ export async function createUser(req: Request, res: Response, next: NextFunction
         });
 
         res.status(201).json({ message: 'Nutzer erfolgreich erstellt', newUser, newUserAddress });
-    } catch (error:any) {
+    } catch (error: any) {
         console.error('Fehler beim Erstellen eines Nutzers:', error.message);
         res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.' });
         next(error);
@@ -53,20 +53,20 @@ export async function getUserData(req: Request, res: Response, next: NextFunctio
             return;
         }
 
-        const user = await Users.findOne ({ where: { email: email } });
-        if (!user){
-            res.status(404).json({ message: 'Nutzer mit Email ${email} nicht gefunden' });
+        const user = await Users.findOne({ where: { email: email } });
+        if (!user) {
+            res.status(404).json({ message: `Nutzer mit Email ${email} nicht gefunden` });
             return;
         }
 
         const address = await Address.findOne({ where: { useremail: email } });
         if (!address) {
-            res.status(404).json({ message: 'Adresse für den Nutzer mit Email ${email} nicht gefunden' });
+            res.status(404).json({ message: `Adresse für den Nutzer mit Email ${email} nicht gefunden` });
             return;
         }
 
-        res.status(200).json({message: 'Daten des Nutzers mit Email: ${email}', user: user, address: address,});
-    } catch (error:any) {
+        res.status(200).json({ message: `Daten des Nutzers mit Email: ${email}`, user: user, address: address });
+    } catch (error: any) {
         console.error('User Abfrage ohne Ergebnis:', error.message);
         res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.' });
         next(error);
@@ -76,7 +76,7 @@ export async function getUserData(req: Request, res: Response, next: NextFunctio
 export async function updateUserData(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
         const { email, password, firstname, surname, phone, birthday, companyName, city, postcode, street, houseNumber } = req.body;
-        if (!email || !password || !firstname || !surname || !phone || !birthday || !city || !postcode || !street || ! houseNumber) {
+        if (!email || !password || !firstname || !surname || !phone || !birthday || !city || !postcode || !street || !houseNumber) {
             res.status(400).json({ error: 'Missing required fields' });
             return;
         }
@@ -87,8 +87,8 @@ export async function updateUserData(req: Request, res: Response, next: NextFunc
             return;
         }
 
-        const adress = await Address.findOne({ where: { useremail: email } });
-        if (!adress) {
+        const address = await Address.findOne({ where: { useremail: email } });
+        if (!address) {
             res.status(404).json({ message: 'Adresse für diesen Benutzer nicht gefunden' });
             return;
         }
@@ -101,15 +101,15 @@ export async function updateUserData(req: Request, res: Response, next: NextFunc
         user.companyName = companyName;
         await user.save();
 
-        adress.city = city;
-        adress.postcode = postcode;
-        adress.street = street;
-        adress.houseNumber = houseNumber;
-        await adress.save();
+        address.city = city;
+        address.postcode = postcode;
+        address.street = street;
+        address.houseNumber = houseNumber;
+        await address.save();
 
-        res.status(201).json({ message: 'Nutzer erfolgreich geändert', user, adress });
+        res.status(200).json({ message: 'Nutzer erfolgreich geändert', user, address });
     } catch (error: any) {
-        console.error('Fehler beim Aktualisieren der Buchung:', error.message);
+        console.error('Fehler beim Aktualisieren der Daten:', error.message);
         res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.' });
         next(error);
     }
@@ -123,9 +123,9 @@ export async function deleteUser(req: Request, res: Response, next: NextFunction
             return;
         }
 
-        const user = await Users.findOne ({ where: { email: email } });
-        if (!user){
-            res.status(404).json({ message: 'Nutzer mit Email ${email} nicht gefunden' });
+        const user = await Users.findOne({ where: { email: email } });
+        if (!user) {
+            res.status(404).json({ message: `Nutzer mit Email ${email} nicht gefunden` });
             return;
         }
 
@@ -140,7 +140,7 @@ export async function deleteUser(req: Request, res: Response, next: NextFunction
             res.status(404).json({ message: 'Benutzer konnte nicht gelöscht werden' });
             return;
         }
-    } catch (error:any) {
+    } catch (error: any) {
         console.error('Fehler beim Löschen eines Nutzers:', error.message);
         res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.' });
         next(error);
@@ -157,7 +157,7 @@ export async function getUserGuthaben(req: Request, res: Response, next: NextFun
 
         const user = await Users.findOne({ where: { email: email } });
         if (!user) {
-            res.status(404).json({ message: 'Nutzer mit Email ${email} nicht gefunden' });
+            res.status(404).json({ message: `Nutzer mit Email ${email} nicht gefunden` });
             return;
         }
 
@@ -184,7 +184,7 @@ export async function putUserGuthaben(req: Request, res: Response, next: NextFun
 
         const user = await Users.findOne({ where: { email: email } });
         if (!user) {
-            res.status(404).json({ message: 'Nutzer mit Email ${email} nicht gefunden' });
+            res.status(404).json({ message: `Nutzer mit Email ${email} nicht gefunden` });
             return;
         }
 
@@ -205,25 +205,25 @@ export async function loginUser(req: Request, res: Response, next: NextFunction)
     try {
         const { email, password } = req.body;
         if (!email || !password) {
-            res.status(400).json({ error: "E-Mail oder Passwort fehlt" });
+            res.status(400).json({ error: 'E-Mail oder Passwort fehlt' });
             return;
         }
     
         const user = await Users.findOne({ where: { email: email } });    
         if (!user) {
-            res.status(404).json({ message: "Nutzer nicht gefunden" });
+            res.status(404).json({ message: 'Nutzer nicht gefunden' });
             return;
         }
     
         if (user.password !== password) {
-            res.status(401).json({ message: "Falsches Passwort" });
+            res.status(401).json({ message: 'Falsches Passwort' });
             return;
         }
     
-        res.status(200).json({ message: "Login erfolgreich", user: { email: user.email, firstname: user.firstname, surname: user.surname, role: user.role, balance: user.balance }});
+        res.status(200).json({ message: 'Login erfolgreich', user: { email: user.email, firstname: user.firstname, surname: user.surname, role: user.role, balance: user.balance } });
     } catch (error: any) {
-        console.error("Fehler beim Login:", error.message);
-        res.status(500).json({message: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut."});
+        console.error('Fehler beim Login:', error.message);
+        res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.' });
         next(error);
     }
 }
