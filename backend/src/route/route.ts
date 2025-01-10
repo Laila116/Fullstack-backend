@@ -5,7 +5,6 @@ import { createBooking, getUserAllBooking } from '../controller/cBookings.js';
 import { createEvent, getAllEvents, updateEvent, deleteEvent, getSelectedEventData, getAllEventsByKategorieUndOrt, getKategorieUndOrt, getEventsByVeranstalter} from "../controller/cEvent.js";
 
 const router = express.Router();
-// Frontend Wichtige EndPunkte
 
 // Home Seite
 router.get('/event/getAllEvents',           getAllEvents);              // Events in Slinder und unten Anzeigen (Bild, Name, Ort)

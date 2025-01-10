@@ -9,8 +9,8 @@ const FeedbackSchema: Schema<IFeedback> = new Schema(
         feedback: {
             type: Number,
             required: true,
-            min: 1.0, // Untergrenze
-            max: 5.0, // Obergrenze
+            min: 1.0,
+            max: 5.0,
             validate: {
                 validator: (value: number) => {
                     // Prüft, ob der Wert eine Zahl in Schritten von 0.1 ist
@@ -28,7 +28,6 @@ const FeedbackSchema: Schema<IFeedback> = new Schema(
     }
 );
 
-// Exportiere das Feedback-Modell
 const Feedback: Model<IFeedback> = mongoose.model<IFeedback>('feedback', FeedbackSchema);
 
 export default Feedback;

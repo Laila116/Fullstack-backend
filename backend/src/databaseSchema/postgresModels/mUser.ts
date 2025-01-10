@@ -22,7 +22,7 @@ Users.init(
       allowNull: false,
     },
     password: {
-      type: DataTypes.STRING(255), // Assuming password is hashed, so the length might be longer
+      type: DataTypes.STRING(255),
       allowNull: false,
     },
     firstname: {
@@ -38,13 +38,13 @@ Users.init(
       allowNull: false,
     },
     birthday: {
-      type: DataTypes.DATEONLY, // Using DATEONLY for date without time
+      type: DataTypes.DATEONLY,
       allowNull: false,
     },
     balance: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
-      defaultValue: 0.00, // Standardwert für balance
+      defaultValue: 0.00,
       validate: {
           isDecimal: { msg: 'Balance must be a valid decimal number' },
           min: { args: [0], msg: 'Balance cannot be negative' },

@@ -27,7 +27,7 @@ class Bookings extends Model<iBookings> implements iBookings {
             model: Users,
             key: 'email',
         },
-        onDelete: 'CASCADE', //wenn User löschen = Buchung löschen!
+        onDelete: 'CASCADE',
     },
       eventID: {
         type: DataTypes.STRING,
@@ -51,7 +51,6 @@ class Bookings extends Model<iBookings> implements iBookings {
       sequelize,
       modelName: 'Booking',
       tableName: 'booking',
-      timestamps: false,
     }
   );
   

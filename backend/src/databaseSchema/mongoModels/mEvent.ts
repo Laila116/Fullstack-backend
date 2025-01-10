@@ -22,7 +22,7 @@ const eventSchema: Schema<IEvent> = new Schema(
     },
     description: {
       type: String,
-      required: false, // Optional
+      required: false,
     },
     imageUrl: { 
       type: String ,
@@ -34,15 +34,13 @@ const eventSchema: Schema<IEvent> = new Schema(
     }, 
   },
   {
-    timestamps: true, // Fügt automatisch createdAt und updatedAt hinzu
+    timestamps: true,
   }
 );
 
 // Optional: Duplikate durch Index verhindern (z. B. Kombination aus Name und Datum)
-eventSchema.index({ name: 1, date: 1 }, { unique: true });
+eventSchema.index({ name: 1, date: 1, location: 1 }, { unique: true });
 
-// Erstelle das Event-Modell
 const Event: Model<IEvent> = mongoose.model<IEvent>("event", eventSchema);
 
-// Exportiere das Modell
 export default Event;

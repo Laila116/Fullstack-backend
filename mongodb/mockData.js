@@ -1,7 +1,5 @@
-// Verbindung zur Datenbank herstellen
 db = db.getSiblingDB("mongo_eventdb");
 
-// MongoDB Event-Dokumente
 db.events.insertMany([
     {
       name: 'Rock Concert',
@@ -59,7 +57,6 @@ db.events.insertMany([
     }
 ]);
 
-// Feedback für Events (MongoDB)
 db.feedbacks.insertMany([
     { eventID: ObjectId('5f50c31b9d9e9c3b35c8e3d1'), userEmail: 'user1@example.com', feedback: 5, comment: 'Amazing concert!' },
     { eventID: ObjectId('5f50c31b9d9e9c3b35c8e3d2'), userEmail: 'user2@example.com', feedback: 4, comment: 'Loved the music!' },
@@ -71,4 +68,3 @@ db.feedbacks.insertMany([
     { eventID: ObjectId('5f50c31b9d9e9c3b35c8e3d8'), userEmail: 'user2@example.com', feedback: 4, comment: 'A great weekend full of new ideas!' },
     { eventID: ObjectId('5f50c31b9d9e9c3b35c8e3d9'), userEmail: 'user3@example.com', feedback: 3, comment: 'Interesting, but a bit too technical.' }
 ]);
-  

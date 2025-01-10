@@ -45,7 +45,6 @@ INSERT INTO users (email, password, firstname, surname, phone, birthday, balance
 ('user2@example.com', 'password123', 'Jane', 'Doe', '0987654321', '1997-07-20', 75.00, 'User', ''),
 ('user3@example.com', 'password123', 'Maximilian', 'Meier', '1122334455', '1999-08-10', 60.00, 'User', 'musa2');
 
--- Adressen für Benutzer hinzufügen
 INSERT INTO "addressUser" (useremail, street, city, postcode, "houseNumber") VALUES
 ('user1@example.com', 'Musterstraße 1', 'Berlin', '10115', 'Germany'),
 ('user1@example.com', 'Beispielallee 12', 'Munich', '80331', 'Germany'),
@@ -53,7 +52,6 @@ INSERT INTO "addressUser" (useremail, street, city, postcode, "houseNumber") VAL
 ('user3@example.com', 'Bahnhofstraße 78', 'Cologne', '50667', 'Germany'),
 ('veranstalter1@example.com', 'Industriestraße 90', 'Stuttgart', '70173', 'Germany');
 
--- EventKosten für jedes Event (Standard, Premium, VIP)
 INSERT INTO "eventCosts" ("eventID", "ticketCost", "ticketBeschreibung", "maxTickets", "verfuegbarTickets") VALUES
 ('677eb60dc60aeba563e9496a', 20.00, 'Standard', 200, 200), 
 ('677eb60dc60aeba563e9496a', 50.00, 'Premium', 100, 100), 
@@ -79,7 +77,6 @@ INSERT INTO "eventCosts" ("eventID", "ticketCost", "ticketBeschreibung", "maxTic
 ('677eb60dc60aeba563e9496f', 15.00, 'Premium', 200, 200), 
 ('677eb60dc60aeba563e9496f', 35.00, 'VIP', 100, 100);
 
--- Buchungen für User
 INSERT INTO booking (useremail, "eventID", "numberOfTickets", "totalPrice", "bookingDate") VALUES
 ('user1@example.com', '677eb60dc60aeba563e9496a', 2, 40.00, '2025-01-01'),
 ('user1@example.com', '677eb60dc60aeba563e9496b', 1, 150.00, '2025-02-10'),
