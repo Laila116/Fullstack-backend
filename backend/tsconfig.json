@@ -8,8 +8,15 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "baseUrl": "./src",  // Setzt das Arbeitsverzeichnis als Basis
+    "paths": {
+      "shared/*": ["../shared/*"]  // Verweist auf das Submodul shared
+    }
   },
-  "include": ["**/*"],                
-  //"exclude": ["node_modules"]
+  "include": [
+    "src/**/*",     // Schließt die Backend-Quelldateien ein
+    "../shared/**/*" // Schließt das Submodul shared ein
+  ],
+  "exclude": ["node_modules"]
 }  
