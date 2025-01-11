@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from "express";
+import bcrypt from 'bcryptjs';
 import Users from "../databaseSchema/postgresModels/mUser.js";
 import Address from "../databaseSchema/postgresModels/mAddress.js";
 import Feedback from "../databaseSchema/mongoModels/mFeedback";
@@ -16,9 +17,10 @@ export async function createUser(req: Request, res: Response, next: NextFunction
             return next(ErrorMessages.UserExists);
         }
 
+        const hashedPassword = await bcrypt.hash(password, 10); // Der Wert 10 ist die "Salt-Round"-Zahl, die die Sicherheit beeinflusst
         const newUser = await Users.create({
             email,
-            password,
+            password:hashedPassword,
             firstname,
             surname,
             phone,
@@ -82,7 +84,8 @@ export async function updateUserData(req: Request, res: Response, next: NextFunc
             return next(ErrorMessages.AddressNotFound);
         }
 
-        user.password = password;
+        const hashedPassword = await bcrypt.hash(password, 10); // Der Wert 10 ist die "Salt-Round"-Zahl, die die Sicherheit beeinflusst
+        user.password = hashedPassword;
         user.firstname = firstname;
         user.surname = surname;
         user.phone = phone;
@@ -186,7 +189,9 @@ export async function loginUser(req: Request, res: Response, next: NextFunction)
             return next(ErrorMessages.UserNotFound);
         }
     
-        if (user.password !== password) {
+        // Vergleiche das eingegebene Passwort mit dem gespeicherten gehashten Passwort
+        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+        if (!isPasswordCorrect) {
             return next(ErrorMessages.WrongPassword);
         }
     

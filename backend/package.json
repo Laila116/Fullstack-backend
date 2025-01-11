@@ -14,6 +14,7 @@
     "dev": "concurrently \"npx tsc -w\"  \"nodemon -r dotenv/config ./dist/backend/src/server.js\""
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
@@ -24,6 +25,7 @@
     "sequelize": "^6.37.5"
   },
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/node": "^22.7.7",
