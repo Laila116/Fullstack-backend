@@ -7,7 +7,7 @@ db.events.insertMany([
       date: new Date('2025-02-15'),
       location: 'Berlin',
       description: 'A rocking good time!',
-      imageUrl: 'rock_concert.jpg',
+      imageUrl: '../../../assets/Event.jpg',
       VeranstalterEmail: 'veranstalter1@example.com'
     },
     {
@@ -16,7 +16,7 @@ db.events.insertMany([
       date: new Date('2025-03-10'),
       location: 'Munich',
       description: 'An evening of smooth jazz.',
-      imageUrl: 'jazz_night.jpg',
+      imageUrl: '../../../assets/event1.jpg',
       VeranstalterEmail: 'veranstalter1@example.com'
     },
     {
@@ -25,7 +25,7 @@ db.events.insertMany([
       date: new Date('2025-04-20'),
       location: 'Frankfurt',
       description: 'Technology enthusiasts unite!',
-      imageUrl: 'tech_conf.jpg',
+      imageUrl: '../../../assets/event2.jpg',
       VeranstalterEmail: 'veranstalter2@example.com'
     },
     {
@@ -34,7 +34,7 @@ db.events.insertMany([
       date: new Date('2025-05-05'),
       location: 'Hamburg',
       description: 'Innovation and entrepreneurship.',
-      imageUrl: 'startup_weekend.jpg',
+      imageUrl: '../../../assets/event3.jpg',
       VeranstalterEmail: 'veranstalter2@example.com'
     },
     {
@@ -43,7 +43,7 @@ db.events.insertMany([
       date: new Date('2025-06-01'),
       location: 'Cologne',
       description: 'A beautiful collection of modern art.',
-      imageUrl: 'art_exhibition.jpg',
+      imageUrl: '../../../assets/event4.jpg',
       VeranstalterEmail: 'veranstalter3@example.com'
     },
     {
@@ -52,7 +52,7 @@ db.events.insertMany([
       date: new Date('2025-07-10'),
       location: 'Düsseldorf',
       description: 'A delicious food extravaganza.',
-      imageUrl: 'food_festival.jpg',
+      imageUrl: '../../../assets/Event.jpg',
       VeranstalterEmail: 'veranstalter3@example.com'
     }
 ]);
