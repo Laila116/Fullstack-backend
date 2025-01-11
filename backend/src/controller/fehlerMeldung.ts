@@ -1,70 +1,77 @@
-// utils/fehlerMeldung.ts
-
 class CustomError extends Error {
     public statusCode: number;
 
     constructor(message: string, statusCode: number) {
         super(message);
         this.statusCode = statusCode;
-        Object.setPrototypeOf(this, new.target.prototype); // Ermöglicht Vererbung in TypeScript
     }
 }
 
 class BadRequestError extends CustomError {
     constructor(message: string) {
-        super(message, 400); // Statuscode 400 für BadRequest
+        super(message, 400);
+    }
+}
+
+class Unauthorized extends CustomError {
+    constructor(message: string) {
+        super(message, 401);
+    }
+}
+
+class ForbiddenError extends CustomError {
+    constructor(message: string) {
+        super(message, 403);
     }
 }
 
 class NotFoundError extends CustomError {
     constructor(message: string) {
-        super(message, 404); // Statuscode 404 für NotFound
+        super(message, 404);
+    }
+}
+
+class ConflictError extends CustomError {
+    constructor(message: string) {
+        super(message, 409);
     }
 }
 
 class InternalServerError extends CustomError {
     constructor(message: string) {
-        super(message, 500); // Statuscode 500 für InternalServerError
+        super(message, 500);
     }
 }
 
-// Fehlerbehandlungen
-class FehlerMeldung {
-    static userNotFound(): NotFoundError {
-        return new NotFoundError("Benutzer nicht gefunden");
-    }
+// Fehlermeldungen
+const ErrorMessages = {
+    MissingFields:                  new BadRequestError("Fehlende Pflichtfelder."),
+    UserNotFound:                   new NotFoundError("Benutzer mit der angegebenen E-Mail-Adresse nicht gefunden."),
+    EventNotFound:                  new NotFoundError("Das Event mit der angegebenen ID wurde nicht gefunden."),
+    EventsNotFound:                 new NotFoundError("Es wurden keine Events gefunden."),
+    TicketTypeNotFound:             new NotFoundError("Tickettyp für das angegebene Event nicht gefunden."),
+    InsufficientTickets: (availableTickets: number) => new BadRequestError(`Nicht genügend verfügbare Tickets. Verfügbare Tickets: ${availableTickets}`),
+    InsufficientBalance: (required: number, available: number) => new BadRequestError(`Nicht genügend Guthaben. Erforderlich: ${required}, Verfügbar: ${available}`),
+    NoBookingsFound:                new NotFoundError("Es wurden keine Buchungen für den angegebenen Benutzer gefunden."),
+    NoFeedbacksForUserFound:        new NotFoundError("Es wurden keine Feedbacks für den angegebenen Benutzer gefunden."),
+    MissingOrganizerRole:           new ForbiddenError("Sie besitzen kein Veranstalter Rolle."),
+    InvalidNumberOfTicketTypes:     new BadRequestError("Bitte geben Sie genau drei Ticketarten an."),
+    NotEventOrganizer:              new ForbiddenError("Sie sind nicht der Veranstalter dieses Events!"),
+    EventUpdateFailed:              new BadRequestError("Event konnte nicht aktualisiert werden."),
+    EventDeletFailed:               new BadRequestError("Event konnte nicht gelöscht werden."),
+    EventCostsNotFound:             new BadRequestError("Keine Event-Kosten gefunden."),
+    NoFeedbacksForEventFound:       new NotFoundError("Keine Feedbacks für das Event gefunden."),
+    NoEventsFoundWithFilters:       new NotFoundError("Keine Events gefunden für die angegebenen Filter."),
+    NoEventsFoundForOrganizer:      new NotFoundError("Keine Events für den Veranstalter gefunden."),
+    UserExists:                     new ConflictError("User already exists."),
+    AddressNotFound:                new NotFoundError("Adresse für den Nutzer nicht gefunden."),
+    UserDeletFailed:                new BadRequestError("User konnte nicht gelöscht werden."),
+    AmountGreaterThanZero:          new BadRequestError("Der Betrag muss größer als 0 sein."),
+    WrongPassword:                  new Unauthorized("Falsches Passwort"),
 
-    static eventNotFound(): NotFoundError {
-        return new NotFoundError("Event nicht gefunden");
-    }
+    InternalServerError:            new InternalServerError("Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut."),
+};
 
-    static ticketTypeNotFound(): NotFoundError {
-        return new NotFoundError("Ticket-Typ nicht gefunden");
-    }
-
-    static insufficientTickets(): BadRequestError {
-        return new BadRequestError("Nicht genügend verfügbare Tickets");
-    }
-
-    static insufficientBalance(): BadRequestError {
-        return new BadRequestError("Nicht genügend Guthaben");
-    }
-
-    static bookingCreationFailed(): InternalServerError {
-        return new InternalServerError("Fehler beim Erstellen der Buchung");
-    }
-
-    static emailMissing(): BadRequestError {
-        return new BadRequestError("Email fehlt");
-    }
-
-    static noBookingsFound(): NotFoundError {
-        return new NotFoundError("Keine Buchungen für diesen Benutzer gefunden");
-    }
-
-    static unexpectedError(): InternalServerError {
-        return new InternalServerError("Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.");
-    }
-}
-
-export { CustomError, BadRequestError, NotFoundError, InternalServerError, FehlerMeldung };
+// Exportiere alles
+export { CustomError, BadRequestError, InternalServerError};
+export default ErrorMessages;

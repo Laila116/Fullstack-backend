@@ -4,42 +4,37 @@ import EventCosts from "../databaseSchema/postgresModels/mEventCosts";
 import Bookings from "../databaseSchema/postgresModels/mBookings";
 import Users from "../databaseSchema/postgresModels/mUser";
 import Event from "../databaseSchema/mongoModels/mEvent";
+import ErrorMessages from "./fehlerMeldung";
 
 export async function createBooking(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
         const { userEmail, eventID, ticketBeschreibung, numberOfTickets } = req.body;
         if (!userEmail || !eventID || !ticketBeschreibung || !numberOfTickets) {
-            res.status(400).json({ error: 'Die folgenden Felder sind erforderlich: userEmail, eventID, ticketBeschreibung, numberOfTickets.' });
-            return;
+            return next(ErrorMessages.MissingFields);
         }
 
         const user = await Users.findOne({ where: { email: userEmail } });
         if (!user) {
-            res.status(404).json({ message: "Benutzer mit der angegebenen E-Mail-Adresse nicht gefunden." });
-            return;
+            return next(ErrorMessages.UserNotFound);
         }
 
         const event = await Event.findById(eventID);
         if (!event) {
-            res.status(404).json({ message: "Das Event mit der angegebenen ID wurde nicht gefunden." });
-            return;
+            return next(ErrorMessages.EventNotFound);
         }
 
         const eventCost = await EventCosts.findOne({ where: { eventID, ticketBeschreibung } });
         if (!eventCost) {
-            res.status(404).json({ message: "Tickettyp für das angegebene Event nicht gefunden." });
-            return;
+            return next(ErrorMessages.TicketTypeNotFound);
         }
 
         if (eventCost.verfuegbarTickets < numberOfTickets) {
-            res.status(400).json({ message: `Nicht genügend verfügbare Tickets. Verfügbare Tickets: ${eventCost.verfuegbarTickets}` });
-            return;
+            return next(ErrorMessages.InsufficientTickets(eventCost.verfuegbarTickets));
         }
 
         const totalPrice = eventCost.ticketCost * numberOfTickets;
         if (user.balance < totalPrice) {
-            res.status(400).json({ message: `Nicht genügend Guthaben. Erforderlich: ${totalPrice}, Verfügbar: ${user.balance}` });
-            return;
+            return next(ErrorMessages.InsufficientBalance(totalPrice, user.balance));
         }
 
         await sequelize.transaction(async (t) => {
@@ -62,37 +57,31 @@ export async function createBooking(req: Request, res: Response, next: NextFunct
 
             res.status(201).json({ message: "Buchung erfolgreich erstellt.", booking });
         });
-    } catch (error: any) {
-        console.error("Fehler beim Erstellen der Buchung:", error.message);
-        res.status(500).json({ message: "Ein Fehler ist beim Erstellen der Buchung aufgetreten. Bitte versuchen Sie es später erneut.", error });
-        next(error);
+    } catch (error) {
+        next(ErrorMessages.InternalServerError);
     }
 }
 
 export async function getUserAllBooking(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
         const userEmail = req.body.email;
+    
         if (!userEmail) {
-            res.status(400).json({ error: 'E-Mail-Adresse ist erforderlich.' });
-            return;
+            return next(ErrorMessages.MissingFields);
         }
 
         const user = await Users.findOne({ where: { email: userEmail } });
         if (!user) {
-            res.status(404).json({ message: "Benutzer mit der angegebenen E-Mail-Adresse nicht gefunden." });
-            return;
+            return next(ErrorMessages.UserNotFound);
         }
 
         const bookings = await Bookings.findAll({ where: { useremail: userEmail } });
         if (!bookings || bookings.length === 0) {
-            res.status(404).json({ message: 'Es wurden keine Buchungen für den angegebenen Benutzer gefunden.' });
-            return;
+            return next(ErrorMessages.NoBookingsFound);
         }
 
         res.status(200).json({ message: 'Alle Buchungen erfolgreich abgerufen.', bookings });
     } catch (error: any) {
-        console.error('Fehler beim Abrufen der Buchungen:', error.message);
-        res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.', error });
-        next(error);
+        next(ErrorMessages.InternalServerError);
     }
 }

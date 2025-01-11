@@ -4,6 +4,7 @@ import { router } from "./route/route.js";
 import { connectToDatabase } from "./databaseConnection/postgres.js";
 import { connectToMongoDB } from "./databaseConnection/mongoDB.js";
 import dotenv from "dotenv";
+import errorHandler from "./controller/errorHandler.js"
 
 dotenv.config({ path: '../.env' });
 const app = express();
@@ -12,6 +13,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 app.use("/api", router);
+app.use(errorHandler);
 
 app.get("/", (req, res) => {
   res.send("Hello from the backend 1234!");

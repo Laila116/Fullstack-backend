@@ -3,30 +3,27 @@ import Event from "../databaseSchema/mongoModels/mEvent";
 import Users from "../databaseSchema/postgresModels/mUser";
 import Feedback from "../databaseSchema/mongoModels/mFeedback";  
 import EventCosts from "../databaseSchema/postgresModels/mEventCosts";
+import ErrorMessages from "./fehlerMeldung";
 
 export async function createEvent ( req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
         const { name, category, date, location, description, imageUrl, ticketDetails, userEmail } = req.body;
         if (!name || !category || !date || !location || !description || !imageUrl || !ticketDetails || !userEmail) {
-            res.status(400).json({ error: 'Fehlende Pflichtfelder: name, category, date, location, description, imageUrl, ticketDetails, userEmail' });
-            return;
+            return next(ErrorMessages.MissingFields);
         }
         
         const user = await Users.findOne({ where: { email: userEmail } });
         if (!user) {
-            res.status(404).json({ message: `Benutzer mit der angegebenen E-Mail-Adresse ${userEmail} nicht gefunden` });
-            return;
+            return next(ErrorMessages.UserNotFound);
         }
 
         if (user.role !== "Veranstalter") {
-            res.status(403).json({ message: "Nur Veranstalter können Events erstellen" });
-            return;
+            return next(ErrorMessages.MissingOrganizerRole);
         }
 
         const newEvent = await Event.create({ name, category, date, location, description, imageUrl, VeranstalterEmail: userEmail });
         if (!ticketDetails || !Array.isArray(ticketDetails) || ticketDetails.length !== 3) {
-            res.status(400).json({ message: "Bitte geben Sie genau drei Ticketarten an." });
-            return;
+            return next(ErrorMessages.InvalidNumberOfTicketTypes);
         }
 
         const eventCosts = ticketDetails.map((ticket: any) => ({
@@ -41,9 +38,7 @@ export async function createEvent ( req: Request, res: Response, next: NextFunct
 
         res.status(201).json({ message: "Event erfolgreich hinzugefügt", event: newEvent });
     } catch (error: any) {
-        console.error("Fehler beim Hinzufügen des Events", error.message);
-        res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.' });
-        next(error);
+        next(ErrorMessages.InternalServerError);
     }
 }
 
@@ -52,8 +47,7 @@ export async function getAllEvents ( req: Request, res: Response, next: NextFunc
         const events = await Event.find();
 
         if (!events || events.length === 0) {
-            res.status(404).json({ message: "Es wurden keine Events gefunden" });
-            return;
+            return next(ErrorMessages.EventsNotFound);
         }
 
         const eventsWithDetails = events.map(event => ({
@@ -64,9 +58,7 @@ export async function getAllEvents ( req: Request, res: Response, next: NextFunc
 
         res.status(200).json(eventsWithDetails);
     } catch (error: any) {
-        console.error("Fehler beim Abrufen der Events:", error.message);
-        res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.' });
-        next(error);
+        next(ErrorMessages.InternalServerError);
     }
 }
 
@@ -74,43 +66,35 @@ export async function updateEvent ( req: Request, res: Response, next: NextFunct
     try {
         const { id, name, category, date, location, description, imageUrl, userEmail } = req.body;
         if (!id || !name || !category || !date || !location || !description || !imageUrl || !userEmail) {
-            res.status(400).json({ error: 'Fehlende Pflichtfelder: id, name, category, date, location, description, imageUrl, userEmail' });
-            return;
+            return next(ErrorMessages.MissingFields);
         }
 
         const user = await Users.findOne({ where: { email: userEmail } });
         if (!user) {
-            res.status(404).json({ message: `Benutzer mit der angegebenen E-Mail-Adresse ${userEmail} nicht gefunden` });
-            return;
+            return next(ErrorMessages.UserNotFound);
         }
 
         if (user.role !== "Veranstalter") {
-            res.status(403).json({ message: "Nur ein Veranstalter kann dieses Event aktualisieren" });
-            return;
+            return next(ErrorMessages.MissingOrganizerRole);
         }
 
         const event = await Event.findById(id);
         if (!event) {
-            res.status(404).json({ message: "Kein Event mit der angegebenen ID gefunden" });
-            return;
+            return next(ErrorMessages.EventNotFound);
         }
 
         if (event.VeranstalterEmail !== userEmail) {
-            res.status(403).json({ message: "Sie sind nicht der Veranstalter dieses Events!" });
-            return;
+            return next(ErrorMessages.NotEventOrganizer);
         }
 
         const updatedEvent = await Event.findByIdAndUpdate(id, { name, category, date, location, description, imageUrl }, { new: true, runValidators: true });
         if (!updatedEvent) {
-            res.status(404).json({ message: "Event konnte nicht aktualisiert werden" });
-            return;
+            return next(ErrorMessages.EventUpdateFailed);
         }
 
         res.status(200).json({ message: "Event erfolgreich aktualisiert!", updatedEvent });
     } catch (error: any) {
-        console.error("Fehler beim Update des Events:", error.message);
-        res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.' });
-        next(error);
+        next(ErrorMessages.InternalServerError);
     }
 }
 
@@ -118,49 +102,40 @@ export async function deleteEvent ( req: Request, res: Response, next: NextFunct
     try {
         const { id, userEmail } = req.body;
         if (!id || !userEmail) {
-            res.status(400).json({ error: 'Fehlende Pflichtfelder: id, userEmail' });
-            return;
+            return next(ErrorMessages.MissingFields);
         }
 
         const user = await Users.findOne({ where: { email: userEmail } });
         if (!user) {
-            res.status(404).json({ message: `Benutzer mit der E-Mail-Adresse ${userEmail} nicht gefunden` });
-            return;
+            return next(ErrorMessages.UserNotFound);
         }
     
         if (user.role !== "Veranstalter") {
-            res.status(403).json({ message: "Nur ein Veranstalter kann dieses Event löschen" });
-            return;
+            return next(ErrorMessages.MissingOrganizerRole);
         }
 
         const event = await Event.findById(id);
         if (!event) {
-            res.status(404).json({ message: "Kein Event mit der angegebenen ID gefunden" });
-            return;
+            return next(ErrorMessages.EventNotFound);
         }
 
         if (event.VeranstalterEmail !== userEmail) {
-            res.status(403).json({ message: "Sie sind nicht der Veranstalter dieses Events!" });
-            return;
+            return next(ErrorMessages.NotEventOrganizer);
         }
 
         const deletedEvent = await Event.findByIdAndDelete(id);
         if (!deletedEvent) {
-            res.status(404).json({ message: "Event konnte nicht gelöscht werden" });
-            return;
+            return next(ErrorMessages.EventDeletFailed);
         }
         
         const deletedEventCosts = await EventCosts.destroy({ where: { eventID: id } });
         if (deletedEventCosts === 0) {
-            res.status(404).json({ message: 'Keine Event-Kosten gefunden' });
-            return;
+            return next(ErrorMessages.EventCostsNotFound);
         }
 
         res.status(200).json({ message: "Event und zugehörige Kosten erfolgreich gelöscht", event: deletedEvent, deletedCostsCount: deletedEventCosts });
     } catch (error: any) {
-        console.error("Fehler beim Löschen des Events:", error.message);
-        res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.' });
-        next(error);
+        next(ErrorMessages.InternalServerError);
     }
 }
 
@@ -168,20 +143,17 @@ export async function getSelectedEventData ( req: Request, res: Response, next: 
     try {
         const eventID = req.body.eventID;
         if (!eventID) {
-            res.status(400).json({ error: 'EventID ist erforderlich' });
-            return;
+            return next(ErrorMessages.MissingFields);
         }
 
         const event = await Event.findById(eventID);
         if (!event) {
-            res.status(404).json({ message: `Kein Event mit der ID ${eventID} gefunden` });
-            return;
+            return next(ErrorMessages.EventNotFound);
         }
 
         const feedback = await Feedback.find({ eventID });
         if (!feedback || feedback.length === 0) {
-            res.status(404).json({ message: `Keine Feedbacks für das Event mit der ID ${eventID} gefunden` });
-            return;
+            return next(ErrorMessages.NoFeedbacksForEventFound);
         }
         
         const totalFeedback = feedback.reduce((sum, feedback) => sum + feedback.feedback, 0);
@@ -189,8 +161,7 @@ export async function getSelectedEventData ( req: Request, res: Response, next: 
 
         const eventCosts = await EventCosts.findAll({ where: { eventID } });
         if (!eventCosts || eventCosts.length === 0) {
-            res.status(404).json({ message: `Keine Event-Kosten für das Event mit der ID ${eventID} gefunden` });
-            return;
+            return next(ErrorMessages.EventCostsNotFound);
         }
 
         const eventData = {
@@ -217,9 +188,7 @@ export async function getSelectedEventData ( req: Request, res: Response, next: 
 
         res.status(200).json(eventData);
     } catch (error: any) {
-        console.error("Fehler beim Abrufen der Event-Daten:", error.message);
-        res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.' });
-        next(error);
+        next(ErrorMessages.InternalServerError);
     }
 }
 
@@ -227,8 +196,7 @@ export async function getAllEventsByKategorieUndOrt ( req: Request, res: Respons
     try {
         const { category, ort } = req.body; 
         if (!category && !ort) {
-            res.status(400).json({ message: "Bitte geben Sie entweder eine Kategorie oder einen Ort an." });
-            return;
+            return next(ErrorMessages.MissingFields);
         }
 
         let filter: any = {};
@@ -238,15 +206,12 @@ export async function getAllEventsByKategorieUndOrt ( req: Request, res: Respons
         const events = await Event.find(filter);
         
         if (!events || events.length === 0) {
-            res.status(404).json({ message: "Keine Events gefunden für die angegebenen Filter" });
-            return;
+            return next(ErrorMessages.NoEventsFoundWithFilters);
         }
 
         res.status(200).json(events);
     } catch (error: any) {
-        console.error("Fehler beim Filtern der Events:", error.message);
-        res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.' });
-        next(error);
+        next(ErrorMessages.InternalServerError);
     }
 }
 
@@ -260,8 +225,7 @@ export async function getKategorieUndOrt ( req: Request, res: Response, next: Ne
 
         const events = await Event.find(filter);
         if (!events || events.length === 0) {
-            res.status(404).json({ message: `Keine Events gefunden für die Kategorie ${kategorie} und den Ort ${ort}` });
-            return;
+            return next(ErrorMessages.NoEventsFoundWithFilters);
         }
 
         const uniqueOrte = [...new Set(events.map((event) => event.location))];
@@ -269,9 +233,7 @@ export async function getKategorieUndOrt ( req: Request, res: Response, next: Ne
 
         res.status(200).json({orte: uniqueOrte, kategorien: uniqueKategorien});
     } catch (error: any) {
-        console.error("Fehler beim Abrufen der gefilterten Orte und Kategorien:", error.message);
-        res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.' });
-        next(error);
+        next(ErrorMessages.InternalServerError);
     }
 }
 
@@ -279,20 +241,16 @@ export async function getEventsByVeranstalter ( req: Request, res: Response, nex
     try {
         const email = req.body.email;
         if (!email) {
-            res.status(400).json({ message: "E-Mail-Adresse des Veranstalters erforderlich" });
-            return;
+            return next(ErrorMessages.MissingFields);
         }
 
         const events = await Event.find({ VeranstalterEmail: email });
         if (!events || events.length === 0) {
-            res.status(404).json({ message: `Keine Events für den Veranstalter mit der E-Mail-Adresse ${email} gefunden` });
-            return;
+            return next(ErrorMessages.NoEventsFoundForOrganizer);
         }
 
         res.status(200).json({ message: "Events erfolgreich abgerufen!", events });
     } catch (error: any) {
-        console.error("Fehler beim Abrufen der Veranstalter-Events:", error.message);
-        res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.' });
-        next(error);
+        next(ErrorMessages.InternalServerError);
     }
 }
