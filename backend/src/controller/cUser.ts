@@ -180,6 +180,7 @@ export async function putUserGuthaben(req: Request, res: Response, next: NextFun
 export async function loginUser(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
         const { email, password } = req.body;
+     
         if (!email || !password) {
             return next(ErrorMessages.MissingFields);
         }

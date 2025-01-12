@@ -38,12 +38,12 @@ CREATE TABLE IF NOT EXISTS booking (
 );
 
 INSERT INTO users (email, password, firstname, surname, phone, birthday, balance, role, "companyName") VALUES
-('veranstalter1@example.com', 'password123', 'Max', 'Mustermann', '1234567890', '1980-01-01', 100.00, 'Veranstalter', 'musa' ),
-('veranstalter2@example.com', 'password123', 'Anna', 'Müller', '0987654321', '1985-02-15', 150.00, 'Veranstalter', 'musa2'),
-('veranstalter3@example.com', 'password123', 'Peter', 'Schmidt', '1122334455', '1990-03-30', 200.00, 'Veranstalter', 'musa2'),
-('user1@example.com', 'password123', 'John', 'Doe', '1234567890', '1995-06-15', 50.00, 'User','musa2'),
-('user2@example.com', 'password123', 'Jane', 'Doe', '0987654321', '1997-07-20', 75.00, 'User', ''),
-('user3@example.com', 'password123', 'Maximilian', 'Meier', '1122334455', '1999-08-10', 60.00, 'User', 'musa2');
+('veranstalter1@example.com', '$2a$10$NLdhNlqqqpSv4e3IgUttbuOmG01qZ73Lyw0kpqJDoekZfv2YObXDO', 'Max', 'Mustermann', '1234567890', '1980-01-01', 100.00, 'Veranstalter', 'musa' ),
+('veranstalter2@example.com', '$2a$10$NLdhNlqqqpSv4e3IgUttbuOmG01qZ73Lyw0kpqJDoekZfv2YObXDO', 'Anna', 'Müller', '0987654321', '1985-02-15', 150.00, 'Veranstalter', 'musa2'),
+('veranstalter3@example.com', '$2a$10$NLdhNlqqqpSv4e3IgUttbuOmG01qZ73Lyw0kpqJDoekZfv2YObXDO', 'Peter', 'Schmidt', '1122334455', '1990-03-30', 200.00, 'Veranstalter', 'musa2'),
+('user1@example.com', '$2a$10$NLdhNlqqqpSv4e3IgUttbuOmG01qZ73Lyw0kpqJDoekZfv2YObXDO', 'John', 'Doe', '1234567890', '1995-06-15', 50.00, 'User','musa2'),
+('user2@example.com', '$2a$10$NLdhNlqqqpSv4e3IgUttbuOmG01qZ73Lyw0kpqJDoekZfv2YObXDO', 'Jane', 'Doe', '0987654321', '1997-07-20', 75.00, 'User', ''),
+('user3@example.com', '$2a$10$NLdhNlqqqpSv4e3IgUttbuOmG01qZ73Lyw0kpqJDoekZfv2YObXDO', 'Maximilian', 'Meier', '1122334455', '1999-08-10', 60.00, 'User', 'musa2');
 
 INSERT INTO "addressUser" (useremail, street, city, postcode, "houseNumber") VALUES
 ('user1@example.com', 'Musterstraße 1', 'Berlin', '10115', 'Germany'),
