@@ -152,9 +152,9 @@ export async function getSelectedEventData ( req: Request, res: Response, next: 
         }
 
         const feedback = await Feedback.find({ eventID });
-        if (!feedback || feedback.length === 0) {
+        /*if (!feedback || feedback.length === 0) {
             return next(ErrorMessages.NoFeedbacksForEventFound);
-        }
+        }*/
         
         const totalFeedback = feedback.reduce((sum, feedback) => sum + feedback.feedback, 0);
         const averageFeedback = feedback.length > 0 ? totalFeedback / feedback.length : 0;

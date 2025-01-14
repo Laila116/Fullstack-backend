@@ -60,7 +60,7 @@ const ErrorMessages = {
     EventUpdateFailed:              new BadRequestError("Event konnte nicht aktualisiert werden."),
     EventDeletFailed:               new BadRequestError("Event konnte nicht gelöscht werden."),
     EventCostsNotFound:             new BadRequestError("Keine Event-Kosten gefunden."),
-    NoFeedbacksForEventFound:       new NotFoundError("Keine Feedbacks für das Event gefunden."),
+    //NoFeedbacksForEventFound:       new NotFoundError("Keine Feedbacks für das Event gefunden."),
     NoEventsFoundWithFilters:       new NotFoundError("Keine Events gefunden für die angegebenen Filter."),
     NoEventsFoundForOrganizer:      new NotFoundError("Keine Events für den Veranstalter gefunden."),
     UserExists:                     new ConflictError("User already exists."),

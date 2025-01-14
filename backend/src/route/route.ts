@@ -10,7 +10,7 @@ const router = express.Router();
 router.get('/event/getAllEvents',           getAllEvents);              // Events in Slinder und unten Anzeigen (Bild, Name, Ort)
 router.post('/event/getAllEventsByKategorieUndOrt', getAllEventsByKategorieUndOrt); // Filter von Events in dem Kategorie und Ort erstellen
 router.get('/event/getKategorieUndOrt',     getKategorieUndOrt);        // Filter von Kategorie und Ort erstellen
-router.get('/event/getSelectedEventData',   getSelectedEventData);      // Ausgewählte Event Daten anzeigen (Alle daten von event und ticket und Feedbacks (''jedes feedback in dem event gegeben wurde'' ))
+router.post('/event/getSelectedEventData',   getSelectedEventData);      // Ausgewählte Event Daten anzeigen (Alle daten von event und ticket und Feedbacks (''jedes feedback in dem event gegeben wurde'' ))
 router.post('/event/createBooking',         createBooking);             // Ticket kaufen (Userguthaben verringern Anzahl von tickets verringern, Buchung für User erstellen )
 
 // Login/ Register
