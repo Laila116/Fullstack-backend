@@ -9,15 +9,15 @@ const FeedbackSchema: Schema<IFeedback> = new Schema(
         feedback: {
             type: Number,
             required: true,
-            min: 1.0, // Untergrenze
-            max: 5.0, // Obergrenze
+            min: 1.0,
+            max: 5.0,
             validate: {
                 validator: (value: number) => {
                     // Prüft, ob der Wert eine Zahl in Schritten von 0.1 ist
                     return Number.isInteger(value * 10);
                 },
                 message: (props: { value: number; path: string }) =>
-                    `${props.value} ist kein gültiger Feedback-Wert. Erlaubte Werte sind in 0.1-Schritten zwischen 1.0 und 5.0.`,
+                    '${props.value} ist kein gültiger Feedback-Wert. Erlaubte Werte sind in 0.1-Schritten zwischen 1.0 und 5.0.',
             },
         },
         comment: { type: String, required: false },
@@ -28,7 +28,6 @@ const FeedbackSchema: Schema<IFeedback> = new Schema(
     }
 );
 
-// Exportiere das Feedback-Modell
 const Feedback: Model<IFeedback> = mongoose.model<IFeedback>('feedback', FeedbackSchema);
 
 export default Feedback;

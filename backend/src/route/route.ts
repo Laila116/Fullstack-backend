@@ -5,7 +5,6 @@ import { createBooking, getUserAllBooking } from '../controller/cBookings.js';
 import { createEvent, getAllEvents, updateEvent, deleteEvent, getSelectedEventData, getAllEventsByKategorieUndOrt, getKategorieUndOrt, getEventsByVeranstalter} from "../controller/cEvent.js";
 
 const router = express.Router();
-// Frontend Wichtige EndPunkte
 
 // Home Seite
 router.get('/event/getAllEvents',           getAllEvents);              // Events in Slinder und unten Anzeigen (Bild, Name, Ort)
@@ -19,19 +18,19 @@ router.post('/user/login',                  loginUser);     // PostUserdata(mail
 router.post('/user/registrieren',           createUser);    // PostAllUserdata(Name, Nachname, Anschrift, mail, passwort)
 
 // Account
-router.get('/user/getAllUserData',          getUserData);       // User Daten Anzeigen (UserData, UserAdress)
+router.post('/user/getAllUserData',          getUserData);       // User Daten Anzeigen (UserData, UserAdress)
 router.put('/user/updateUserData',          updateUserData);    // Ändern von user data (UserData, UserAdress, außer Email und Rolle )
 router.delete('/user/deleteUser',           deleteUser);        // User löschen (UserData, UserAdress, UserBuchung, UserTransaktion, UserFeedback)
 
 // Guthaben
-router.get('/user/getUserGuthaben',         getUserGuthaben); // User aktuelle Guthaben anzeigen (UserData tabelle Balacne)
+router.post('/user/getUserGuthaben',         getUserGuthaben); // User aktuelle Guthaben anzeigen (UserData tabelle Balacne)
 router.put('/user/putUserGuthaben',         putUserGuthaben); // User Guthaben aufladen (UserData tabelle Balacne dazu addieren)
 
 // Kommentare
-router.get('/user/getUserAllFeedback',      getUserAllFeedback); // alle feedbacks die der user hat
+router.post('/user/getUserAllFeedback',      getUserAllFeedback); // alle feedbacks die der user hat
 
 // Buchungen
-router.get('/user/getUserAllBooking',       getUserAllBooking); // Alle buchungen von user 
+router.post('/user/getUserAllBooking',       getUserAllBooking); // Alle buchungen von user 
 
 //Event
 router.post('/user/createEvent',            createEvent); // veranstallung mit den tickets ertsellen nur für User Role "veranstalter"
@@ -40,6 +39,6 @@ router.post('/user/createEvent',            createEvent); // veranstallung mit d
 router.post('/feedback/createFeedback',     createFeedback);
 router.put("/events/updateEvent",           updateEvent);
 router.delete("/events/deleteEvent",        deleteEvent); // löscht auch event cost
-router.get("/user/getEventsByVeranstalter", getEventsByVeranstalter); // gibt die evnts pro veranstalter
+router.post("/user/getEventsByVeranstalter", getEventsByVeranstalter); // gibt die evnts pro veranstalter
 
 export { router };

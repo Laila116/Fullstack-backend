@@ -7,7 +7,7 @@ const dbUser = process.env.PG_USER || 'AdminUser';
 const dbPassword = process.env.PG_PASSWORD || 'AdminPassword';
 const dbHost = process.env.DATABASE_HOST || 'localhost';
 const dbPort = parseInt(process.env.PG_PORT || '5432', 10);
-const sequelize = new Sequelize(dbName, dbUser, dbPassword, { //von Compose datei für verbindung
+const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
   host: dbHost,
   port: dbPort,
   dialect: 'postgres',
@@ -31,6 +31,5 @@ async function connectToDatabase(): Promise<Boolean> {
   }
   return false;
 }
-
 
 export { connectToDatabase, sequelize };

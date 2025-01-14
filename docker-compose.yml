@@ -4,8 +4,10 @@ services:
   # Node.js Backend
   backend:
     build:
-      context: ./backend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./backend/Dockerfile
+    volumes:
+      - ./shared:/app/shared
     ports:
       - "${PORT}:${PORT}" # Exponiert den Port 3000 des Containers auf Port 3000 deines Hosts
     env_file:
@@ -20,7 +22,7 @@ services:
     #- ./backend:/app       # Mountet den gesamten 'backend'-Ordner in den Container
     #Entkommentiere dies, wenn du die 'dist'-Dateien mounten willst (für Entwicklung)
     #- ./backend/dist:/app/dist
-    #command: ["npm", "run", "start"]  # Startet die Anwendung, wenn der Container hochfährt
+    command: ["npm", "run", "start"]  # Startet die Anwendung, wenn der Container hochfährt
 
   # PostgreSQL Database
   postgres-db:

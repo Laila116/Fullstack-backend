@@ -1,6 +1,6 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../../databaseConnection/postgres.js';
-import { iEventCosts } from '../../../../shared/interface/iEventCosts.js';
+import { iEventCosts } from '../../../../shared/interface/iEventCosts';
 import { ObjectId } from "mongoose";
 
 class EventCosts extends Model<iEventCosts> implements iEventCosts {
@@ -16,12 +16,12 @@ EventCosts.init(
       eventID: {
           type: DataTypes.STRING,
           allowNull: false,
-          primaryKey: true, // Teil des zusammengesetzten Primärschlüssels
+          primaryKey: true,
       },
       ticketBeschreibung: {
           type: DataTypes.STRING,
           allowNull: false,
-          primaryKey: true, // Teil des zusammengesetzten Primärschlüssels
+          primaryKey: true,
       },
       ticketCost: {
           type: DataTypes.FLOAT,
@@ -40,7 +40,6 @@ EventCosts.init(
       sequelize,
       modelName: 'EventCosts',
       tableName: 'eventCosts',
-      timestamps: false,
   }
 );
 

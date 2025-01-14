@@ -1,35 +1,31 @@
-import { Request, Response, NextFunction } from 'express';
-import Users from '../databaseSchema/postgresModels/mUser.js';
-import Address from '../databaseSchema/postgresModels/mAddress.js';
-import Feedback from '../databaseSchema/mongoModels/mFeedback';
+import { Request, Response, NextFunction } from "express";
+import bcrypt from 'bcryptjs';
+import Users from "../databaseSchema/postgresModels/mUser.js";
+import Address from "../databaseSchema/postgresModels/mAddress.js";
+import Feedback from "../databaseSchema/mongoModels/mFeedback";
+import ErrorMessages from "./fehlerMeldung";
 
 export async function createUser(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
         const { email, password, firstname, surname, phone, birthday, role, companyName, city, postcode, street, houseNumber } = req.body;
-        console.log(email, password, firstname, surname, phone, birthday, role, companyName, city, postcode, street, houseNumber);
-
-        // Validierung der notwendigen Felder
-        if (!email || !password || !firstname || !surname || !phone || !birthday || !role || !city || !postcode || !street || ! houseNumber) {
-            res.status(400).json({ error: 'Missing required fields' });
-            return;
+        if (!email || !password || !firstname || !surname || !phone || !birthday || !role || !city || !postcode || !street || !houseNumber) {
+            return next(ErrorMessages.MissingFields);
         }
 
-        // Prüfen, ob die E-Mail bereits existiert
-        const user = await Users.findOne ({ where: { email: email } });
-
-        if (user){
-            res.status(409).json({ error: 'User already exists' });
-            return;
+        const user = await Users.findOne({ where: { email: email } });
+        if (user) {
+            return next(ErrorMessages.UserExists);
         }
 
+        const hashedPassword = await bcrypt.hash(password, 10); // Der Wert 10 ist die "Salt-Round"-Zahl, die die Sicherheit beeinflusst
         const newUser = await Users.create({
             email,
-            password,
+            password:hashedPassword,
             firstname,
             surname,
             phone,
             birthday,
-            balance: 0.0, // Balance explizit setzen
+            balance: 0.0,
             role,
             companyName,
         });
@@ -43,235 +39,165 @@ export async function createUser(req: Request, res: Response, next: NextFunction
         });
 
         res.status(201).json({ message: 'Nutzer erfolgreich erstellt', newUser, newUserAddress });
-
-    } catch (error:any) {
-        console.error('Fehler beim Erstellen eines Nutzers:', error.message);
-        res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.' });
-        next(error);
+    } catch (error: any) {
+        next(ErrorMessages.InternalServerError);
     }
 }
 
 export async function getUserData(req: Request, res: Response, next: NextFunction): Promise<void> {
-    const email = req.body.email as string;
     try {
+        const email = req.body.email;
         if (!email) {
-            res.status(400).json({ error: 'Email is missing' });
-            return;
+            return next(ErrorMessages.MissingFields);
         }
 
-        const user = await Users.findOne ({ where: { email: email } });
-
-        if (!user){
-            res.status(404).json({ message: `Nutzer mit Email ${email} nicht gefunden` });
-            return;
+        const user = await Users.findOne({ where: { email: email } });
+        if (!user) {
+            return next(ErrorMessages.UserNotFound);
         }
-        // Adresse des Benutzers abrufen
+
         const address = await Address.findOne({ where: { useremail: email } });
-
         if (!address) {
-            res.status(404).json({ message: `Adresse für den Nutzer mit Email ${email} nicht gefunden` });
-            return;
+            return next(ErrorMessages.AddressNotFound);
         }
 
-        console.log(user, address);
-
-        // Benutzer- und Adressdaten zurückgeben
-        res.status(200).json({
-            message: `Daten des Nutzers mit Email: ${email}`,
-            user: user,
-            address: address,
-        });
-    } catch (error:any) {
-        console.error('User Abfrage ohne Ergebnis:', error.message);
-        res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.' });
-        next(error); // Fehler weiterleiten
+        res.status(200).json({ message: `Daten des Nutzers mit Email: ${email}`, user: user, address: address });
+    } catch (error: any) {
+        next(ErrorMessages.InternalServerError);
     }
 }
 
 export async function updateUserData(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
         const { email, password, firstname, surname, phone, birthday, companyName, city, postcode, street, houseNumber } = req.body;
-        console.log(email, password, firstname, surname, phone, birthday, city, companyName, postcode, street, houseNumber);
-
-        // Validierung der notwendigen Felder
-        if (!email || !password || !firstname || !surname || !phone || !birthday || !city || !postcode || !street || ! houseNumber) {
-            res.status(400).json({ error: 'Missing required fields' });
-            return;
+        if (!email || !password || !firstname || !surname || !phone || !birthday || !city || !postcode || !street || !houseNumber) {
+            return next(ErrorMessages.MissingFields);
         }
 
         const user = await Users.findOne({ where: { email: email } });
-        const adress = await Address.findOne({ where: { useremail: email } });
-
-
         if (!user) {
-            res.status(404).json({ message: 'User nicht gefunden' });
-            return;
+            return next(ErrorMessages.UserNotFound);
         }
 
-        if (!adress) {
-            res.status(404).json({ message: 'Adresse für diesen Benutzer nicht gefunden' });
-            return;
+        const address = await Address.findOne({ where: { useremail: email } });
+        if (!address) {
+            return next(ErrorMessages.AddressNotFound);
         }
 
-        user.password = password;
+        const hashedPassword = await bcrypt.hash(password, 10); // Der Wert 10 ist die "Salt-Round"-Zahl, die die Sicherheit beeinflusst
+        user.password = hashedPassword;
         user.firstname = firstname;
         user.surname = surname;
         user.phone = phone;
         user.birthday = birthday;
         user.companyName = companyName;
-
         await user.save();
 
-        adress.city = city;
-        adress.postcode = postcode;
-        adress.street = street;
-        adress.houseNumber = houseNumber;
+        address.city = city;
+        address.postcode = postcode;
+        address.street = street;
+        address.houseNumber = houseNumber;
+        await address.save();
 
-        await adress.save();
-        res.status(201).json({ message: 'Nutzer erfolgreich geändert', user, adress });
+        res.status(200).json({ message: 'Nutzer erfolgreich geändert', user, address });
     } catch (error: any) {
-        console.error('Fehler beim Aktualisieren der Buchung:', error.message);
-        next(error);
+        next(ErrorMessages.InternalServerError);
     }
 }
 
 export async function deleteUser(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
         const email = req.body.email;
-
         if (!email) {
-            res.status(400).json({ error: 'Email is missing' });
-            return;
+            return next(ErrorMessages.MissingFields);
         }
 
-        const user = await Users.findOne ({ where: { email: email } });
-
-        if (!user){
-            res.status(404).json({ message: `Nutzer mit Email ${email} nicht gefunden` });
-            return;
+        const user = await Users.findOne({ where: { email: email } });
+        if (!user) {
+            return next(ErrorMessages.UserNotFound);
         }
 
-        // Löschen aller zugehörigen Feedbacks in der MongoDB
-        const feedbackDeletionResult = await Feedback.deleteMany({ userEmail: email });
-        console.log(`Feedbacks gelöscht: ${feedbackDeletionResult.deletedCount}`);
+        await Feedback.deleteMany({ userEmail: email });
 
         await user.destroy();
-
-        res.status(200).json({ message: `Nutzer mit Email ${email} erfolgreich gelöscht` });
-    } catch (error:any) {
-        console.error('Fehler beim Löschen eines Nutzers:', error.message);
-        res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.' });
-        next(error);
+        const deletedUser = await Users.findOne({ where: { email: email } });
+        if (!deletedUser) {
+            res.status(200).json({ message: `Nutzer mit Email ${email} erfolgreich gelöscht` });
+            return;
+        } else {
+            return next(ErrorMessages.UserDeletFailed);
+        }
+    } catch (error: any) {
+        next(ErrorMessages.InternalServerError);
     }
 }
 
 export async function getUserGuthaben(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-        const email = req.body.email as string;
-
+        const email = req.body.email;
         if (!email) {
-            res.status(400).json({ error: 'Email is missing' });
-            return;
+            return next(ErrorMessages.MissingFields);
         }
 
         const user = await Users.findOne({ where: { email: email } });
-
         if (!user) {
-            res.status(404).json({ message: `Nutzer mit Email ${email} nicht gefunden` });
-            return;
+            return next(ErrorMessages.UserNotFound);
         }
 
         res.status(200).json({ message: 'Aktuelles Guthaben abgerufen', balance: user.balance });
     } catch (error: any) {
-        console.error('Fehler beim Abrufen des Guthabens:', error.message);
-        res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.' });
-        next(error);
+        next(ErrorMessages.InternalServerError);
     }
 }
 
 export async function putUserGuthaben(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-        const email = req.body.email as string;
-        const amount = req.body.amount as number;
-
-        if (!email || amount == null || isNaN(amount)) {
-            res.status(400).json({ error: 'Email oder Betrag fehlt oder ist ungültig' });
-            return;
+        const { email, amount } = req.body;
+        if (!email || !amount) {
+            return next(ErrorMessages.MissingFields);
         }
 
         if (amount <= 0) {
-            res.status(400).json({ error: 'Der Betrag muss größer als 0 sein' });
-            return;
+            return next(ErrorMessages.AmountGreaterThanZero);
         }
 
         const user = await Users.findOne({ where: { email: email } });
-
         if (!user) {
-            res.status(404).json({ message: `Nutzer mit Email ${email} nicht gefunden` });
-            return;
+            return next(ErrorMessages.UserNotFound);
         }
 
-
-        // Konvertiere balance in eine Zahl
         const currentBalance = parseFloat(user.balance.toString());
-
-        // Addiere den Betrag
         const newBalance = currentBalance + amount;
-
-        // Weise den neuen Wert zu (als String, um Sequelize zu entsprechen)
         user.balance = parseFloat(newBalance.toFixed(2));
-
-        // Speichern
         await user.save();
         
         res.status(200).json({ message: 'Guthaben erfolgreich aufgeladen', newBalance: user.balance });
     } catch (error: any) {
-        console.error('Fehler beim Aufladen des Guthabens:', error.message);
-        res.status(500).json({ message: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.' });
-        next(error);
+        next(ErrorMessages.InternalServerError);
     }
 }
 
 export async function loginUser(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { email, password } = req.body;
-  
-      // Validierung der erforderlichen Felder
-      if (!email || !password) {
-        res.status(400).json({ error: "E-Mail oder Passwort fehlt" });
-        return;
-      }
-  
-      // Überprüfen, ob der Nutzer existiert
-      const user = await Users.findOne({ where: { email: email } });
-  
-      if (!user) {
-        res.status(404).json({ message: "Nutzer nicht gefunden" });
-        return;
-      }
-  
-      // Überprüfung des Passworts
-      if (user.password !== password) {
-        res.status(401).json({ message: "Falsches Passwort" });
-        return;
-      }
-  
-      // Erfolg: Nutzer ist authentifiziert
-      res.status(200).json({
-        message: "Login erfolgreich",
-        user: {
-          email: user.email,
-          firstname: user.firstname,
-          surname: user.surname,
-          role: user.role,
-          balance: user.balance,
-        },
-      });
+        const { email, password } = req.body;
+     
+        if (!email || !password) {
+            return next(ErrorMessages.MissingFields);
+        }
+    
+        const user = await Users.findOne({ where: { email: email } });    
+        if (!user) {
+            return next(ErrorMessages.UserNotFound);
+        }
+    
+        // Vergleiche das eingegebene Passwort mit dem gespeicherten gehashten Passwort
+        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+        if (!isPasswordCorrect) {
+            return next(ErrorMessages.WrongPassword);
+        }
+    
+        res.status(200).json({ message: 'Login erfolgreich', user: { email: user.email, firstname: user.firstname, surname: user.surname, role: user.role, balance: user.balance } });
     } catch (error: any) {
-      console.error("Fehler beim Login:", error.message);
-      res.status(500).json({
-        message: "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.",
-      });
-      next(error);
+        next(ErrorMessages.InternalServerError);
     }
 }

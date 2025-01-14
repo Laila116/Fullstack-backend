@@ -1,6 +1,6 @@
 import { sequelize } from '../../databaseConnection/postgres.js';
 import { Model, DataTypes } from 'sequelize';
-import { AddressAttributes} from '../../../../shared/interface/iAddress.js';
+import { AddressAttributes} from '../../../../shared/interface/iAddress';
 import Users from './mUser.js';
 
 class Address extends Model<AddressAttributes> implements AddressAttributes{
@@ -26,7 +26,6 @@ Address.init(
             model: Users,
             key: 'email',
         },
-        onUpdate: 'CASCADE', // Verhalten bei Updates des Fremdschlüssels
         onDelete: 'CASCADE',
     },
     city: {
