@@ -51,7 +51,7 @@ export async function getUserData(req: Request, res: Response, next: NextFunctio
             return next(ErrorMessages.MissingFields);
         }
 
-        const user = await Users.findOne({ where: { email: email } });
+        const user = await Users.findOne({ where: { email: email },attributes: { exclude: ['password'] } });
         if (!user) {
             return next(ErrorMessages.UserNotFound);
         }
