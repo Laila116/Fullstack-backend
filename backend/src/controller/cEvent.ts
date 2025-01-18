@@ -51,8 +51,10 @@ export async function getAllEvents ( req: Request, res: Response, next: NextFunc
         }
 
         const eventsWithDetails = events.map(event => ({
+            eventID: event._id,
             name: event.name,
             location: event.location,
+            category: event.category,
             imageUrl: event.imageUrl || null  // Das Bild-URL (falls vorhanden)
         }));
 
@@ -194,17 +196,21 @@ export async function getSelectedEventData ( req: Request, res: Response, next: 
 
 export async function getAllEventsByKategorieUndOrt ( req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-        const { category, ort } = req.body; 
-        if (!category && !ort) {
+        const { category, location } = req.body; 
+        if (!category && !location) {
             return next(ErrorMessages.MissingFields);
         }
 
         let filter: any = {};
-        if (category) filter.category = category;
-        if (ort) filter.ort = ort;
-        
+        if (category && category.length > 0) {
+            filter.category = { $in: category }; // Verwende $in für mehrere Kategorien
+        }
+    
+        if (location && location.length > 0) {
+            filter.location = { $in: location }; // Verwende $in für mehrere Orte
+        }
+
         const events = await Event.find(filter);
-        
         if (!events || events.length === 0) {
             return next(ErrorMessages.NoEventsFoundWithFilters);
         }
