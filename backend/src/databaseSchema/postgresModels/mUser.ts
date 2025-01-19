@@ -1,4 +1,4 @@
-import { sequelize } from '../../databaseConnection/postgres.js';
+import { sequelize } from '../../databaseConnection/postgres';
 import { Model, DataTypes } from 'sequelize';
 import { UserData} from '@shared/interface/iUser';
 

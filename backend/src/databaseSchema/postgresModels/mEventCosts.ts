@@ -1,5 +1,5 @@
 import { Model, DataTypes } from 'sequelize';
-import { sequelize } from '../../databaseConnection/postgres.js';
+import { sequelize } from '../../databaseConnection/postgres';
 import { iEventCosts } from '@shared/interface/iEventCosts';
 import { ObjectId } from "mongoose";
 

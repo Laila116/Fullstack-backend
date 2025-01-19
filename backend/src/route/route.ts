@@ -1,8 +1,8 @@
 import express from 'express';
-import {createUser, getUserData, updateUserData, deleteUser, getUserGuthaben, putUserGuthaben, loginUser } from '../controller/cUser.js';
-import { createFeedback, getUserAllFeedback } from '../controller/cFeedback.js';
-import { createBooking, getUserAllBooking } from '../controller/cBookings.js';
-import { createEvent, getAllEvents, updateEvent, deleteEvent, getSelectedEventData, getAllEventsByKategorieUndOrt, getKategorieUndOrt, getEventsByVeranstalter} from "../controller/cEvent.js";
+import {createUser, getUserData, updateUserData, deleteUser, getUserGuthaben, putUserGuthaben, loginUser } from '../controller/cUser';
+import { createFeedback, getUserAllFeedback } from '../controller/cFeedback';
+import { createBooking, getUserAllBooking } from '../controller/cBookings';
+import { createEvent, getAllEvents, updateEvent, deleteEvent, getSelectedEventData, getAllEventsByKategorieUndOrt, getKategorieUndOrt, getEventsByVeranstalter} from "../controller/cEvent";
 
 const router = express.Router();
 

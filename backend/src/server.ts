@@ -1,13 +1,13 @@
 import express from "express";
 import cors from "cors";
-import { router } from "./route/route.js";
-import { connectToDatabase } from "./databaseConnection/postgres.js";
-import { connectToMongoDB } from "./databaseConnection/mongoDB.js";
+import { router } from "./route/route";
+import { connectToDatabase } from "./databaseConnection/postgres";
+import { connectToMongoDB } from "./databaseConnection/mongoDB";
 import dotenv from "dotenv";
-import errorHandler from "./controller/errorHandler.js"
+import errorHandler from "./controller/errorHandler"
 
 dotenv.config({ path: '../.env' });
-const app = express();
+export const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());

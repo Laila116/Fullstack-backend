@@ -1,6 +1,7 @@
 # Node.js
 backend/node_modules
 backend/dist
+backend/coverage
 #tsconfig.tsbuildinfo
 
 # Datenbanken

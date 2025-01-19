@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import bcrypt from 'bcryptjs';
-import Users from "../databaseSchema/postgresModels/mUser.js";
-import Address from "../databaseSchema/postgresModels/mAddress.js";
+import Users from "../databaseSchema/postgresModels/mUser";
+import Address from "../databaseSchema/postgresModels/mAddress";
 import Feedback from "../databaseSchema/mongoModels/mFeedback";
 import ErrorMessages from "./fehlerMeldung";
 
