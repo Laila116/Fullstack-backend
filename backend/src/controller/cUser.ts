@@ -39,7 +39,7 @@ export async function createUser(req: Request, res: Response, next: NextFunction
         });
 
         res.status(201).json({ message: 'Nutzer erfolgreich erstellt', newUser, newUserAddress });
-    } catch (error: any) {
+    } catch (error) {
         next(ErrorMessages.InternalServerError);
     }
 }
@@ -62,7 +62,7 @@ export async function getUserData(req: Request, res: Response, next: NextFunctio
         }
 
         res.status(200).json({ message: `Daten des Nutzers mit Email: ${email}`, user: user, address: address });
-    } catch (error: any) {
+    } catch (error) {
         next(ErrorMessages.InternalServerError);
     }
 }
@@ -100,7 +100,7 @@ export async function updateUserData(req: Request, res: Response, next: NextFunc
         await address.save();
 
         res.status(200).json({ message: 'Nutzer erfolgreich geändert', user, address });
-    } catch (error: any) {
+    } catch (error) {
         next(ErrorMessages.InternalServerError);
     }
 }
@@ -127,7 +127,7 @@ export async function deleteUser(req: Request, res: Response, next: NextFunction
         } else {
             return next(ErrorMessages.UserDeletFailed);
         }
-    } catch (error: any) {
+    } catch (error) {
         next(ErrorMessages.InternalServerError);
     }
 }
@@ -145,7 +145,7 @@ export async function getUserGuthaben(req: Request, res: Response, next: NextFun
         }
 
         res.status(200).json({ message: 'Aktuelles Guthaben abgerufen', balance: user.balance });
-    } catch (error: any) {
+    } catch (error) {
         next(ErrorMessages.InternalServerError);
     }
 }
@@ -172,7 +172,7 @@ export async function putUserGuthaben(req: Request, res: Response, next: NextFun
         await user.save();
         
         res.status(200).json({ message: 'Guthaben erfolgreich aufgeladen', newBalance: user.balance });
-    } catch (error: any) {
+    } catch (error) {
         next(ErrorMessages.InternalServerError);
     }
 }
@@ -197,7 +197,7 @@ export async function loginUser(req: Request, res: Response, next: NextFunction)
         }
     
         res.status(200).json({ message: 'Login erfolgreich', user: { email: user.email, firstname: user.firstname, surname: user.surname, role: user.role, balance: user.balance } });
-    } catch (error: any) {
+    } catch (error) {
         next(ErrorMessages.InternalServerError);
     }
 }

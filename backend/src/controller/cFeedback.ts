@@ -29,7 +29,7 @@ export async function createFeedback(req: Request, res: Response, next: NextFunc
         });        
 
         res.status(201).json({ message: 'Feedback erfolgreich erstellt.', feedback: feedbackData });
-    } catch (error: any) {
+    } catch (error) {
         next(ErrorMessages.InternalServerError);
     }
 }
@@ -52,7 +52,7 @@ export async function getUserAllFeedback(req: Request, res: Response, next: Next
         }
 
         res.status(200).json({ message: 'Alle Feedbacks erfolgreich abgerufen.', feedback });
-    } catch (error: any) {
+    } catch (error) {
         next(ErrorMessages.InternalServerError);
     }
 }
