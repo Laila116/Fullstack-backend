@@ -1,19 +1,6 @@
-# Node.js
 backend/node_modules
 backend/dist
 backend/coverage
-#tsconfig.tsbuildinfo
-
-# Datenbanken
 datenbank/mongo
 datenbank/postgres
-
-# Umgebungsdateien
-#.env
-
-# Docker
-#docker-compose.override.yml
-
-# Log-Dateien
-#*.log
 node_modules

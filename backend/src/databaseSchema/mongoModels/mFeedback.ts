@@ -13,7 +13,7 @@ const FeedbackSchema: Schema<IFeedback> = new Schema(
             max: 5.0,
             validate: {
                 validator: (value: number) => {
-                    // Prüft, ob der Wert eine Zahl in Schritten von 0.1 ist
+                    
                     return Number.isInteger(value * 10);
                 },
                 message: (props: { value: number; path: string }) =>
@@ -23,8 +23,8 @@ const FeedbackSchema: Schema<IFeedback> = new Schema(
         comment: { type: String, required: false },
     },
     {
-        timestamps:  {createdAt: true, updatedAt: false },// Nur createdAt wird behalten
-        versionKey: false // __v wird deaktiviert (version eines Dokuments)
+        timestamps:  {createdAt: true, updatedAt: false },
+        versionKey: false 
     }
 );
 

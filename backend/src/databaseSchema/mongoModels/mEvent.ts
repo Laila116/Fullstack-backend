@@ -1,7 +1,7 @@
 import mongoose, { Schema, Model } from "mongoose";
 import { IEvent } from "@shared/interface/iEvent";
 
-// Definiere das Event-Schema
+
 const eventSchema: Schema<IEvent> = new Schema(
   {
     name: {
@@ -38,7 +38,7 @@ const eventSchema: Schema<IEvent> = new Schema(
   }
 );
 
-// Optional: Duplikate durch Index verhindern (z. B. Kombination aus Name und Datum)
+
 eventSchema.index({ name: 1, date: 1, location: 1 }, { unique: true });
 
 const Event: Model<IEvent> = mongoose.model<IEvent>("event", eventSchema);

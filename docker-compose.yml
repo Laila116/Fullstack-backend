@@ -11,24 +11,24 @@ services:
       dockerfile: Dockerfile
     ports:
       - "${PORT}:${PORT}"
-    environment:      # Definiert Umgebungsvariablen für die Verbindung zur PostgreSQL- und MongoDB-Datenbank
+    environment: 
       - PORT=${PORT}
-      - DATABASE_HOST=postgresdb       # weil BE nicht im Docker
-      - PG_USER=${PG_USER}         # Benutzername für PostgreSQL
-      - PG_PASSWORD=${PG_PASSWORD} # Passwort für PostgreSQL
-      - PG_NAME=${PG_NAME}       # Name der PostgreSQL-Datenbank
+      - DATABASE_HOST=postgresdb 
+      - PG_USER=${PG_USER}  
+      - PG_PASSWORD=${PG_PASSWORD}
+      - PG_NAME=${PG_NAME} 
       - PG_PORT=${PG_PORT}    
-      - MONGO_URI=${MONGO_DOCKER_URI}  # Verbindung zur MongoDB-Datenbank
-      - MONGO_DB_NAME=${MONGO_DB_NAME}                      # Name der MongoDB-Datenbank
+      - MONGO_URI=${MONGO_DOCKER_URI} 
+      - MONGO_DB_NAME=${MONGO_DB_NAME} 
       - MONGO_PORT=${MONGO_PORT}
-    depends_on: # stellt sciher das die vor Backend-Container gestartet werden
+    depends_on:
       - postgres-db
       - mongo-db
     restart: always
   postgres-db:
     image: postgres:15
     container_name: postgresdb
-    environment: # Definiert Standardwerte für den PostgreSQL-Benutzer, das Passwort und die Datenbank
+    environment:
       POSTGRES_USER: ${PG_USER}
       POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_DB: ${PG_NAME}
@@ -45,6 +45,3 @@ services:
       - "${MONGO_PORT}:${MONGO_PORT}"
     volumes:
       - ./mongodb/mockData.js:/docker-entrypoint-initdb.d/mockData.js
-#volumes:
-#  postgres_data:  # Definiert das Docker-Volume für PostgreSQL-Daten
-#  mongo_data:     # Definiert das Docker-Volume für MongoDB-Daten

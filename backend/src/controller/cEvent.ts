@@ -56,7 +56,7 @@ export async function getAllEvents ( req: Request, res: Response, next: NextFunc
             name: event.name,
             location: event.location,
             category: event.category,
-            imageUrl: event.imageUrl || null  // Das Bild-URL (falls vorhanden)
+            imageUrl: event.imageUrl || null  
         }));
 
         res.status(200).json(eventsWithDetails);
@@ -173,10 +173,10 @@ export async function getSelectedEventData ( req: Request, res: Response, next: 
                 description: event.description,
                 location: event.location,
                 date: event.date,
-                imageUrl: event.imageUrl || null  // Bild-URL, falls vorhanden
+                imageUrl: event.imageUrl || null  
             },
             feedback: {
-                average: averageFeedback.toFixed(1), // Durchschnitt der Feedback-Bewertungen
+                average: averageFeedback.toFixed(1), 
                 comments: feedback.map((feedback) => ({
                     userEmail: feedback.userEmail,
                     comment: feedback.comment,
@@ -204,11 +204,11 @@ export async function getAllEventsByKategorieUndOrt ( req: Request, res: Respons
 
         let filter: any = {};
         if (category && category.length > 0) {
-            filter.category = { $in: category }; // Verwende $in für mehrere Kategorien
+            filter.category = { $in: category }; 
         }
     
         if (location && location.length > 0) {
-            filter.location = { $in: location }; // Verwende $in für mehrere Orte
+            filter.location = { $in: location }; 
         }
 
         const events = await Event.find(filter);

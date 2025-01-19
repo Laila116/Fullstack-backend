@@ -17,7 +17,7 @@ export async function createUser(req: Request, res: Response, next: NextFunction
             return next(ErrorMessages.UserExists);
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10); // Der Wert 10 ist die "Salt-Round"-Zahl, die die Sicherheit beeinflusst
+        const hashedPassword = await bcrypt.hash(password, 10); 
         const newUser = await Users.create({
             email,
             password:hashedPassword,
@@ -84,7 +84,7 @@ export async function updateUserData(req: Request, res: Response, next: NextFunc
             return next(ErrorMessages.AddressNotFound);
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10); // Der Wert 10 ist die "Salt-Round"-Zahl, die die Sicherheit beeinflusst
+        const hashedPassword = await bcrypt.hash(password, 10); 
         user.password = hashedPassword;
         user.firstname = firstname;
         user.surname = surname;
@@ -190,7 +190,7 @@ export async function loginUser(req: Request, res: Response, next: NextFunction)
             return next(ErrorMessages.UserNotFound);
         }
     
-        // Vergleiche das eingegebene Passwort mit dem gespeicherten gehashten Passwort
+        
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
         if (!isPasswordCorrect) {
             return next(ErrorMessages.WrongPassword);

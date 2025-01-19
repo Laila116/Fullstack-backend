@@ -17,14 +17,14 @@ const sequelize = new Sequelize(dbName, dbUser, dbPassword, {
   define: {
     timestamps: false
   },
-  logging: (msg) => console.log(msg), // SQL-Logging aktivieren
+  logging: (msg) => console.log(msg), 
 });
 
 async function connectToDatabase(): Promise<Boolean> {
   try {
     await sequelize.authenticate();
     console.log('Connected to PostgreSQL');
-    await sequelize.sync(); // force: true erzwingt das Neu-Erstellen aller Tabellen
+    await sequelize.sync(); 
     return true;
   } catch (authError) {
     console.error('Fehler beim Authentifizieren zur PostrgesDB');
