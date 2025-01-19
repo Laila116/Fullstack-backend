@@ -5,16 +5,16 @@ services:
     #volumes:
      # - ./shared:/app/shared
     ports:
-      - "4200:4200"
-    networks:
-      - my_network 
+      - "${PORT_FE}:${PORT_FE}"
+    #networks:
+     # - my_network 
     #command: npm run start  
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "3000:3000" # Exponiert den Port 3000 des Containers auf Port 3000 deines Hosts
+      - "${PORT}:${PORT}"
     environment:      # Definiert Umgebungsvariablen für die Verbindung zur PostgreSQL- und MongoDB-Datenbank
       - PORT=${PORT}
       - DATABASE_HOST=postgresdb       # weil BE nicht im Docker
@@ -29,8 +29,8 @@ services:
       - postgres-db
       - mongo-db
     #restart: always
-    networks:
-      - my_network 
+   # networks:
+    #  - my_network 
   # PostgreSQL Database
   postgres-db:
     image: postgres:15
@@ -40,35 +40,35 @@ services:
       POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_DB: ${PG_NAME}
     ports:
-      - "5432:5432"
-      #- "${PG_PORT}:${PG_PORT}"
+      #- "5432:5432"
+      - "${PG_PORT}:${PG_PORT}"
     #env_file:
       #- .env  # Verweist auf die .env-Datei im selben Verzeichnis wie die docker-compose.yml
     volumes:
       #- ./postgres/data:/var/lib/postgresql/data  # Persistente Speicherung der Daten
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
-    networks:
-      - my_network 
+    #networks:
+     # - my_network 
   # MongoDB Database
   mongo-db:
     image: mongo:latest
     container_name: mongodb
     environment:
-      MONGO_INITDB_DATABASE: mongo_eventdb
-      #MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
+      #MONGO_INITDB_DATABASE: mongo_eventdb
+      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
     ports:
-      - "27017:27017"
-      #- "${MONGO_PORT}:${MONGO_PORT}"
+      #- "27017:27017"
+      - "${MONGO_PORT}:${MONGO_PORT}"
     #env_file:
      # - .env  # Verweist auf die .env-Datei im selben Verzeichnis wie die docker-compose.yml
     volumes:
       - ./mongodb/mockData.js:/docker-entrypoint-initdb.d/mockData.js
       #- ./mongodb:/data/db  # Persistente Speicherung der MongoDB-Daten
-    networks:
-      - my_network 
-networks:
-  my_network:
-    driver: bridge
+   # networks:
+    #  - my_network 
+#networks:
+ # my_network:
+  #  driver: bridge
 
 #volumes:
 #  postgres_data:  # Definiert das Docker-Volume für PostgreSQL-Daten
