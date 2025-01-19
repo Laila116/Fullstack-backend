@@ -81,7 +81,7 @@ export async function getUserAllBooking(req: Request, res: Response, next: NextF
         }
 
         res.status(200).json({ message: 'Alle Buchungen erfolgreich abgerufen.', bookings });
-    } catch (error: any) {
+    } catch (error) {
         next(ErrorMessages.InternalServerError);
     }
 }

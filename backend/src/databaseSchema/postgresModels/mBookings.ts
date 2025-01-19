@@ -1,7 +1,7 @@
 import { Model, DataTypes } from 'sequelize';
-import { sequelize } from '../../databaseConnection/postgres.js';
-import { iBookings } from '../../../../shared/interface/iBookings';
-import Users from './mUser.js';
+import { sequelize } from '../../databaseConnection/postgres';
+import { iBookings } from '@shared/interface/iBookings';
+import Users from './mUser';
 import { ObjectId } from "mongoose";
 
 class Bookings extends Model<iBookings> implements iBookings {

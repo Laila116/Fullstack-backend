@@ -46,12 +46,12 @@ INSERT INTO users (email, password, firstname, surname, phone, birthday, balance
 ('user3@example.com', '$2a$10$NLdhNlqqqpSv4e3IgUttbuOmG01qZ73Lyw0kpqJDoekZfv2YObXDO', 'Maximilian', 'Meier', '1122334455', '1999-08-10', 60.00, 'User', 'musa2');
 
 INSERT INTO "addressUser" (useremail, street, city, postcode, "houseNumber") VALUES
-('user1@example.com', 'Musterstraße 1', 'Mannheim', '10115', 'Germany'),
-('user2@example.com', 'Hauptstraße 45', 'Hamburg', '20095', 'Germany'),
-('user3@example.com', 'Bahnhofstraße 78', 'Luxemburg', '50667', 'Germany'),
-('veranstalter1@example.com', 'Industriestraße 90', 'Stuttgart', '70173', 'Germany'),
-('veranstalter2@example.com', 'Industriestraße 90', 'Mannheim', '68239', 'Germany'),
-('veranstalter3@example.com', 'Industriestraße 90', 'Hamburg', '70173', 'Germany');
+('user1@example.com', 'Musterstraße', 'Mannheim', '10115', '1'),
+('user2@example.com', 'Hauptstraße', 'Hamburg', '20095', '45'),
+('user3@example.com', 'Bahnhofstraße', 'Luxemburg', '50667', '78'),
+('veranstalter1@example.com', 'Industriestraße', 'Stuttgart', '70173', '90'),
+('veranstalter2@example.com', 'Industriestraße', 'Mannheim', '68239', '90'),
+('veranstalter3@example.com', 'Industriestraße', 'Hamburg', '70173', '90');
 
 INSERT INTO "eventCosts" ("eventID", "ticketCost", "ticketBeschreibung", "maxTickets", "verfuegbarTickets") VALUES
 ('677eb60dc60aeba563e9496a', 20.00, 'Standard Ticket', 200, 200), 

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import bcrypt from 'bcryptjs';
-import Users from "../databaseSchema/postgresModels/mUser.js";
-import Address from "../databaseSchema/postgresModels/mAddress.js";
+import Users from "../databaseSchema/postgresModels/mUser";
+import Address from "../databaseSchema/postgresModels/mAddress";
 import Feedback from "../databaseSchema/mongoModels/mFeedback";
 import ErrorMessages from "./fehlerMeldung";
 
@@ -17,7 +17,7 @@ export async function createUser(req: Request, res: Response, next: NextFunction
             return next(ErrorMessages.UserExists);
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10); // Der Wert 10 ist die "Salt-Round"-Zahl, die die Sicherheit beeinflusst
+        const hashedPassword = await bcrypt.hash(password, 10); 
         const newUser = await Users.create({
             email,
             password:hashedPassword,
@@ -39,7 +39,7 @@ export async function createUser(req: Request, res: Response, next: NextFunction
         });
 
         res.status(201).json({ message: 'Nutzer erfolgreich erstellt', newUser, newUserAddress });
-    } catch (error: any) {
+    } catch (error) {
         next(ErrorMessages.InternalServerError);
     }
 }
@@ -62,7 +62,7 @@ export async function getUserData(req: Request, res: Response, next: NextFunctio
         }
 
         res.status(200).json({ message: `Daten des Nutzers mit Email: ${email}`, user: user, address: address });
-    } catch (error: any) {
+    } catch (error) {
         next(ErrorMessages.InternalServerError);
     }
 }
@@ -84,7 +84,7 @@ export async function updateUserData(req: Request, res: Response, next: NextFunc
             return next(ErrorMessages.AddressNotFound);
         }
 
-        const hashedPassword = await bcrypt.hash(password, 10); // Der Wert 10 ist die "Salt-Round"-Zahl, die die Sicherheit beeinflusst
+        const hashedPassword = await bcrypt.hash(password, 10); 
         user.password = hashedPassword;
         user.firstname = firstname;
         user.surname = surname;
@@ -100,7 +100,7 @@ export async function updateUserData(req: Request, res: Response, next: NextFunc
         await address.save();
 
         res.status(200).json({ message: 'Nutzer erfolgreich geändert', user, address });
-    } catch (error: any) {
+    } catch (error) {
         next(ErrorMessages.InternalServerError);
     }
 }
@@ -127,7 +127,7 @@ export async function deleteUser(req: Request, res: Response, next: NextFunction
         } else {
             return next(ErrorMessages.UserDeletFailed);
         }
-    } catch (error: any) {
+    } catch (error) {
         next(ErrorMessages.InternalServerError);
     }
 }
@@ -145,7 +145,7 @@ export async function getUserGuthaben(req: Request, res: Response, next: NextFun
         }
 
         res.status(200).json({ message: 'Aktuelles Guthaben abgerufen', balance: user.balance });
-    } catch (error: any) {
+    } catch (error) {
         next(ErrorMessages.InternalServerError);
     }
 }
@@ -172,7 +172,7 @@ export async function putUserGuthaben(req: Request, res: Response, next: NextFun
         await user.save();
         
         res.status(200).json({ message: 'Guthaben erfolgreich aufgeladen', newBalance: user.balance });
-    } catch (error: any) {
+    } catch (error) {
         next(ErrorMessages.InternalServerError);
     }
 }
@@ -190,14 +190,14 @@ export async function loginUser(req: Request, res: Response, next: NextFunction)
             return next(ErrorMessages.UserNotFound);
         }
     
-        // Vergleiche das eingegebene Passwort mit dem gespeicherten gehashten Passwort
+        
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
         if (!isPasswordCorrect) {
             return next(ErrorMessages.WrongPassword);
         }
     
         res.status(200).json({ message: 'Login erfolgreich', user: { email: user.email, firstname: user.firstname, surname: user.surname, role: user.role, balance: user.balance } });
-    } catch (error: any) {
+    } catch (error) {
         next(ErrorMessages.InternalServerError);
     }
 }

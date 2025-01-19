@@ -4,6 +4,7 @@ import Users from "../databaseSchema/postgresModels/mUser";
 import Feedback from "../databaseSchema/mongoModels/mFeedback";  
 import EventCosts from "../databaseSchema/postgresModels/mEventCosts";
 import ErrorMessages from "./fehlerMeldung";
+import { iEventCosts } from "@shared/interface/iEventCosts";
 
 export async function createEvent ( req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
@@ -26,7 +27,7 @@ export async function createEvent ( req: Request, res: Response, next: NextFunct
             return next(ErrorMessages.InvalidNumberOfTicketTypes);
         }
 
-        const eventCosts = ticketDetails.map((ticket: any) => ({
+        const eventCosts = ticketDetails.map((ticket: iEventCosts) => ({
             eventID: newEvent.id,
             ticketBeschreibung: ticket.ticketBeschreibung,
             ticketCost: ticket.ticketCost,
@@ -37,7 +38,7 @@ export async function createEvent ( req: Request, res: Response, next: NextFunct
         await EventCosts.bulkCreate(eventCosts);
 
         res.status(201).json({ message: "Event erfolgreich hinzugefügt", event: newEvent });
-    } catch (error: any) {
+    } catch (error) {
         next(ErrorMessages.InternalServerError);
     }
 }
@@ -55,11 +56,11 @@ export async function getAllEvents ( req: Request, res: Response, next: NextFunc
             name: event.name,
             location: event.location,
             category: event.category,
-            imageUrl: event.imageUrl || null  // Das Bild-URL (falls vorhanden)
+            imageUrl: event.imageUrl || null  
         }));
 
         res.status(200).json(eventsWithDetails);
-    } catch (error: any) {
+    } catch (error) {
         next(ErrorMessages.InternalServerError);
     }
 }
@@ -95,7 +96,7 @@ export async function updateEvent ( req: Request, res: Response, next: NextFunct
         }
 
         res.status(200).json({ message: "Event erfolgreich aktualisiert!", updatedEvent });
-    } catch (error: any) {
+    } catch (error) {
         next(ErrorMessages.InternalServerError);
     }
 }
@@ -136,7 +137,7 @@ export async function deleteEvent ( req: Request, res: Response, next: NextFunct
         }
 
         res.status(200).json({ message: "Event und zugehörige Kosten erfolgreich gelöscht", event: deletedEvent, deletedCostsCount: deletedEventCosts });
-    } catch (error: any) {
+    } catch (error) {
         next(ErrorMessages.InternalServerError);
     }
 }
@@ -154,9 +155,6 @@ export async function getSelectedEventData ( req: Request, res: Response, next: 
         }
 
         const feedback = await Feedback.find({ eventID });
-        /*if (!feedback || feedback.length === 0) {
-            return next(ErrorMessages.NoFeedbacksForEventFound);
-        }*/
         
         const totalFeedback = feedback.reduce((sum, feedback) => sum + feedback.feedback, 0);
         const averageFeedback = feedback.length > 0 ? totalFeedback / feedback.length : 0;
@@ -172,10 +170,10 @@ export async function getSelectedEventData ( req: Request, res: Response, next: 
                 description: event.description,
                 location: event.location,
                 date: event.date,
-                imageUrl: event.imageUrl || null  // Bild-URL, falls vorhanden
+                imageUrl: event.imageUrl || null  
             },
             feedback: {
-                average: averageFeedback.toFixed(1), // Durchschnitt der Feedback-Bewertungen
+                average: averageFeedback.toFixed(1), 
                 comments: feedback.map((feedback) => ({
                     userEmail: feedback.userEmail,
                     comment: feedback.comment,
@@ -189,7 +187,7 @@ export async function getSelectedEventData ( req: Request, res: Response, next: 
         };
 
         res.status(200).json(eventData);
-    } catch (error: any) {
+    } catch (error) {
         next(ErrorMessages.InternalServerError);
     }
 }
@@ -203,11 +201,11 @@ export async function getAllEventsByKategorieUndOrt ( req: Request, res: Respons
 
         let filter: any = {};
         if (category && category.length > 0) {
-            filter.category = { $in: category }; // Verwende $in für mehrere Kategorien
+            filter.category = { $in: category }; 
         }
     
         if (location && location.length > 0) {
-            filter.location = { $in: location }; // Verwende $in für mehrere Orte
+            filter.location = { $in: location }; 
         }
 
         const events = await Event.find(filter);
@@ -216,7 +214,7 @@ export async function getAllEventsByKategorieUndOrt ( req: Request, res: Respons
         }
 
         res.status(200).json(events);
-    } catch (error: any) {
+    } catch (error) {
         next(ErrorMessages.InternalServerError);
     }
 }
@@ -238,7 +236,7 @@ export async function getKategorieUndOrt ( req: Request, res: Response, next: Ne
         const uniqueKategorien = [...new Set(events.map((event) => event.category))];
 
         res.status(200).json({orte: uniqueOrte, kategorien: uniqueKategorien});
-    } catch (error: any) {
+    } catch (error) {
         next(ErrorMessages.InternalServerError);
     }
 }
@@ -256,7 +254,7 @@ export async function getEventsByVeranstalter ( req: Request, res: Response, nex
         }
 
         res.status(200).json({ message: "Events erfolgreich abgerufen!", events });
-    } catch (error: any) {
+    } catch (error) {
         next(ErrorMessages.InternalServerError);
     }
 }
