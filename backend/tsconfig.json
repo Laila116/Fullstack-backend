@@ -3,20 +3,19 @@
     "target": "ES6",          
     "module": "commonjs",     
     "outDir": "./dist",       
-    //"rootDir": "./src",
     "strict": true,           
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "skipLibCheck": true,
-    "baseUrl": "./",  // Setzt das Arbeitsverzeichnis als Basis
+    "baseUrl": "./",
     "paths": {
-      "@shared/*": ["./shared/*"]  // Verweist auf das Submodul shared
+      "@shared/*": ["./shared/*"]
     }
   },
   "include": [
-    "src/**/*",     // Schließt die Backend-Quelldateien ein
-    "shared/**/*" // Schließt das Submodul shared ein
+    "src/**/*", 
+    "shared/**/*"
   ],
   "exclude": ["node_modules"]
 }  
