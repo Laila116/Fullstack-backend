@@ -5,15 +5,13 @@ FROM node:20.10.0
 WORKDIR /app
 
 # Kopiere package.json und package-lock.json aus dem 'backend' Verzeichnis
-COPY backend/package*.json ./
+COPY . .
+#COPY ../shared ../shared
 
 # Installiere die Abhängigkeiten
 RUN npm install
-
-# Kopiere den restlichen Quellcode aus dem 'backend' Verzeichnis
-COPY backend/ ./
-
-# Führe das Build-Skript aus
+RUN npm install -g typescript
+RUN npm install --save-dev @types/express
 RUN npm run build
 
 # Nutze .env-Variable zur Laufzeit

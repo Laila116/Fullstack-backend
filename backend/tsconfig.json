@@ -11,12 +11,12 @@
     "skipLibCheck": true,
     "baseUrl": "./src",  // Setzt das Arbeitsverzeichnis als Basis
     "paths": {
-      "shared/*": ["../shared/*"]  // Verweist auf das Submodul shared
+      "@shared/*": ["../../shared/*"]  // Verweist auf das Submodul shared
     }
   },
   "include": [
     "src/**/*",     // Schließt die Backend-Quelldateien ein
-    "../shared/**/*" // Schließt das Submodul shared ein
+   "../../shared/**/*" // Schließt das Submodul shared ein
   ],
   "exclude": ["node_modules"]
 }  

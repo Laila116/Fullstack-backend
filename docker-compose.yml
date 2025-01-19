@@ -1,41 +1,56 @@
-version: "3.8"
-
 services:
-  # Node.js Backend
-  backend:
-    build:
-      context: .
-      dockerfile: ./backend/Dockerfile
+  frontend:
+    build: 
+      context: ../frontend
     volumes:
       - ./shared:/app/shared
     ports:
-      - "${PORT}:${PORT}" # Exponiert den Port 3000 des Containers auf Port 3000 deines Hosts
-    env_file:
-      - .env  # Verweist auf die .env-Datei im selben Verzeichnis wie die docker-compose.yml
+      - "4200:4200" 
+    command: npm run start  
+
+  # Node.js Backend
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    volumes:
+      - ./shared:/app/shared
+    ports:
+      - "3000:3000"
+      #- "${PORT}:${PORT}" # Exponiert den Port 3000 des Containers auf Port 3000 deines Hosts
+    #env_file:
+     # - .env  # Verweist auf die .env-Datei im selben Verzeichnis wie die docker-compose.yml
     #environment:      # Definiert Umgebungsvariablen für die Verbindung zur PostgreSQL- und MongoDB-Datenbank
     #  - DATABASE_URL=postgres://user:password@postgres-db:5432/eventdb
     #  - MONGO_URI=mongodb://localhost:27017/event-comments
     depends_on: # stellt sciher das die vor Backend-Container gestartet werden
       - postgres-db
       - mongo-db
+
     #volumes:
     #- ./backend:/app       # Mountet den gesamten 'backend'-Ordner in den Container
     #Entkommentiere dies, wenn du die 'dist'-Dateien mounten willst (für Entwicklung)
     #- ./backend/dist:/app/dist
-    command: ["npm", "run", "start"]  # Startet die Anwendung, wenn der Container hochfährt
+    command: npm start  # Startet die Anwendung, wenn der Container hochfährt
+    restart: always
 
   # PostgreSQL Database
   postgres-db:
     image: postgres:15
     container_name: postgresdb
-    ports:
-      - "${PG_PORT}:${PG_PORT}"
-    env_file:
-      - .env  # Verweist auf die .env-Datei im selben Verzeichnis wie die docker-compose.yml
     environment: # Definiert Standardwerte für den PostgreSQL-Benutzer, das Passwort und die Datenbank
-      POSTGRES_USER: ${PG_USER}
-      POSTGRES_PASSWORD: ${PG_PASSWORD}
-      POSTGRES_DB: ${PG_NAME}
+      #POSTGRES_USER: ${PG_USER}
+      #POSTGRES_PASSWORD: ${PG_PASSWORD}
+      #POSTGRES_DB: ${PG_NAME}
+      POSTGRES_USER: AdminUser         # Benutzername für PostgreSQL
+      POSTGRES_PASSWORD: AdminPassword # Passwort für PostgreSQL
+      POSTGRES_DB: postgre_eventdb 
+    ports:
+      - "5432:5432"
+      #- "${PG_PORT}:${PG_PORT}"
+    #env_file:
+      #- .env  # Verweist auf die .env-Datei im selben Verzeichnis wie die docker-compose.yml
+ 
     volumes:
       #- ./postgres/data:/var/lib/postgresql/data  # Persistente Speicherung der Daten
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -44,16 +59,19 @@ services:
   mongo-db:
     image: mongo:latest
     container_name: mongodb
-    ports:
-      - "${MONGO_PORT}:${MONGO_PORT}"
-    env_file:
-      - .env  # Verweist auf die .env-Datei im selben Verzeichnis wie die docker-compose.yml
     environment:
-      MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
+      MONGO_INITDB_DATABASE: mongo_eventdb
+      #MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
+    ports:
+      - "27017:27017"
+      #- "${MONGO_PORT}:${MONGO_PORT}"
+    #env_file:
+     # - .env  # Verweist auf die .env-Datei im selben Verzeichnis wie die docker-compose.yml
+
     volumes:
       - ./mongodb/mockData.js:/docker-entrypoint-initdb.d/mockData.js
       #- ./mongodb:/data/db  # Persistente Speicherung der MongoDB-Daten
-    
+
 
 #volumes:
 #  postgres_data:  # Definiert das Docker-Volume für PostgreSQL-Daten

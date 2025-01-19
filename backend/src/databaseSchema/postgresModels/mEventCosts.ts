@@ -1,6 +1,6 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../../databaseConnection/postgres.js';
-import { iEventCosts } from '../../../../shared/interface/iEventCosts';
+import { iEventCosts } from '@shared/interface/iEventCosts';
 import { ObjectId } from "mongoose";
 
 class EventCosts extends Model<iEventCosts> implements iEventCosts {
