@@ -64,7 +64,7 @@ db.feedbacks.insertMany([
     { eventID: ObjectId('5f50c31b9d9e9c3b35c8e3d4'), userEmail: 'user1@example.com', feedback: 5, comment: 'Schön.' },
     { eventID: ObjectId('5f50c31b9d9e9c3b35c8e3d5'), userEmail: 'user2@example.com', feedback: 4, comment: 'Großartige Ausstellung!' },
     { eventID: ObjectId('5f50c31b9d9e9c3b35c8e3d6'), userEmail: 'user3@example.com', feedback: 2, comment: 'Toll.' },
-    { eventID: ObjectId('5f50c31b9d9e9c3b35c8e3d7'), userEmail: 'user1@example.com', feedback: 5, comment: 'Hab mich in das Konzept verliebt.' },
-    { eventID: ObjectId('5f50c31b9d9e9c3b35c8e3d8'), userEmail: 'user2@example.com', feedback: 4, comment: 'Schön, habe viele neue Ideen!' },
-    { eventID: ObjectId('5f50c31b9d9e9c3b35c8e3d9'), userEmail: 'user3@example.com', feedback: 3, comment: 'nteressant, aber war mir persönlich zu technisch.' }
+    { eventID: ObjectId('5f50c31b9d9e9c3b35c8e3d7'), userEmail: 'veranstalter1@example.com', feedback: 5, comment: 'Hab mich in das Konzept verliebt.' },
+    { eventID: ObjectId('5f50c31b9d9e9c3b35c8e3d8'), userEmail: 'veranstalter2@example.com', feedback: 4, comment: 'Schön, habe viele neue Ideen!' },
+    { eventID: ObjectId('5f50c31b9d9e9c3b35c8e3d9'), userEmail: 'veranstalter3@example.com', feedback: 3, comment: 'nteressant, aber war mir persönlich zu technisch.' }
 ]);

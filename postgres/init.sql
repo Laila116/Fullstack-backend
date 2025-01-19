@@ -51,6 +51,8 @@ INSERT INTO "addressUser" (useremail, street, city, postcode, "houseNumber") VAL
 ('user2@example.com', 'Hauptstraße 45', 'Hamburg', '20095', 'Germany'),
 ('user3@example.com', 'Bahnhofstraße 78', 'Luxemburg', '50667', 'Germany'),
 ('veranstalter1@example.com', 'Industriestraße 90', 'Stuttgart', '70173', 'Germany');
+('veranstalter2@example.com', 'Industriestraße 90', 'Mannheim', '68239', 'Germany');
+('veranstalter3@example.com', 'Industriestraße 90', 'Hamburg', '70173', 'Germany');
 
 INSERT INTO "eventCosts" ("eventID", "ticketCost", "ticketBeschreibung", "maxTickets", "verfuegbarTickets") VALUES
 ('677eb60dc60aeba563e9496a', 20.00, 'Standard Ticket', 200, 200), 
@@ -84,3 +86,9 @@ INSERT INTO booking (useremail, "eventID", "numberOfTickets", "totalPrice", "boo
 ('user2@example.com', '677eb60dc60aeba563e9496d', 1, 10.00, '2025-02-20'),
 ('user3@example.com', '677eb60dc60aeba563e9496e', 2, 200.00, '2025-03-05'),
 ('user3@example.com', '677eb60dc60aeba563e9496f', 3, 45.00, '2025-03-25');
+('veranstalter1@example.com', '677eb60dc60aeba563e9496e', 2, 200.00, '2025-03-05'),
+('veranstalter1@example.com', '677eb60dc60aeba563e9496e', 2, 200.00, '2025-03-05'),
+('veranstalter2@example.com', '677eb60dc60aeba563e9496e', 2, 200.00, '2025-03-05'),
+('veranstalter2@example.com', '677eb60dc60aeba563e9496e', 2, 200.00, '2025-03-05'),
+('veranstalter3@example.com', '677eb60dc60aeba563e9496e', 2, 200.00, '2025-03-05'),
+('veranstalter3@example.com', '677eb60dc60aeba563e9496e', 2, 200.00, '2025-03-05'),
