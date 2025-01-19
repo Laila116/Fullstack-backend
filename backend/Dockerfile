@@ -1,23 +1,15 @@
-# Basis-Image von Node.js
+# Basis-Image
 FROM node:20.10.0
 
-# Arbeitsverzeichnis im Container festlegen
+# Arbeitsverzeichnis setzen
 WORKDIR /app
 
-# Kopiere package.json und package-lock.json aus dem 'backend' Verzeichnis
+# Kopiere den Backend-Code
 COPY . .
-#COPY ../shared ../shared
 
-# Installiere die Abhängigkeiten
+# Installiere Abhängigkeiten
 RUN npm install
-RUN npm install -g typescript
-RUN npm install --save-dev @types/express
-RUN npm run build
 
-# Nutze .env-Variable zur Laufzeit
-
-# Exponiere den Port
 EXPOSE 3000
-
-# Startet die Anwendung
+# Setze den Befehl
 CMD ["npm", "start"]
