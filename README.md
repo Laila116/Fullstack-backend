@@ -10,6 +10,7 @@ Zübeyde Dogan 679407 <br>
 Musa Albayrak 678975 <br>
 
 # Docker
+in backend repository
 - docker-compose up
 
 # Docker start manuell
