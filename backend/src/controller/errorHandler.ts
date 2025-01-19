@@ -8,11 +8,5 @@ function errorHandler(error: any, req: Request, res: Response, next: NextFunctio
         res.status(500).json({ error: 'Ein unerwarteter Fehler ist aufgetreten' });
     }
 }
-/*
-function sendResponse(res: Response, statusCode: number, message: string) {
-    return res.status(statusCode).json({ message });
-}
 
-export {handleError, sendResponse}
-*/
 export default errorHandler;
