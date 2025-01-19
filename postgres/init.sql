@@ -47,11 +47,10 @@ INSERT INTO users (email, password, firstname, surname, phone, birthday, balance
 
 INSERT INTO "addressUser" (useremail, street, city, postcode, "houseNumber") VALUES
 ('user1@example.com', 'Musterstraße 1', 'Mannheim', '10115', 'Germany'),
-('user1@example.com', 'Beispielallee 12', 'Stuttgart', '80331', 'Germany'),
 ('user2@example.com', 'Hauptstraße 45', 'Hamburg', '20095', 'Germany'),
 ('user3@example.com', 'Bahnhofstraße 78', 'Luxemburg', '50667', 'Germany'),
-('veranstalter1@example.com', 'Industriestraße 90', 'Stuttgart', '70173', 'Germany');
-('veranstalter2@example.com', 'Industriestraße 90', 'Mannheim', '68239', 'Germany');
+('veranstalter1@example.com', 'Industriestraße 90', 'Stuttgart', '70173', 'Germany'),
+('veranstalter2@example.com', 'Industriestraße 90', 'Mannheim', '68239', 'Germany'),
 ('veranstalter3@example.com', 'Industriestraße 90', 'Hamburg', '70173', 'Germany');
 
 INSERT INTO "eventCosts" ("eventID", "ticketCost", "ticketBeschreibung", "maxTickets", "verfuegbarTickets") VALUES
@@ -85,10 +84,10 @@ INSERT INTO booking (useremail, "eventID", "numberOfTickets", "totalPrice", "boo
 ('user2@example.com', '677eb60dc60aeba563e9496c', 3, 120.00, '2025-01-15'),
 ('user2@example.com', '677eb60dc60aeba563e9496d', 1, 10.00, '2025-02-20'),
 ('user3@example.com', '677eb60dc60aeba563e9496e', 2, 200.00, '2025-03-05'),
-('user3@example.com', '677eb60dc60aeba563e9496f', 3, 45.00, '2025-03-25');
+('user3@example.com', '677eb60dc60aeba563e9496f', 3, 45.00, '2025-03-25'),
 ('veranstalter1@example.com', '677eb60dc60aeba563e9496e', 2, 200.00, '2025-03-05'),
 ('veranstalter1@example.com', '677eb60dc60aeba563e9496e', 2, 200.00, '2025-03-05'),
 ('veranstalter2@example.com', '677eb60dc60aeba563e9496e', 2, 200.00, '2025-03-05'),
 ('veranstalter2@example.com', '677eb60dc60aeba563e9496e', 2, 200.00, '2025-03-05'),
 ('veranstalter3@example.com', '677eb60dc60aeba563e9496e', 2, 200.00, '2025-03-05'),
-('veranstalter3@example.com', '677eb60dc60aeba563e9496e', 2, 200.00, '2025-03-05'),
+('veranstalter3@example.com', '677eb60dc60aeba563e9496e', 2, 200.00, '2025-03-05');
