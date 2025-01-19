@@ -10,7 +10,7 @@ Zübeyde Dogan 679407 <br>
 Musa Albayrak 678975 <br>
 
 # Docker
-in backend repository
+in backend repository: <br>
 - docker-compose up
 
 # Submodule installieren
