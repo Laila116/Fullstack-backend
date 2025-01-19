@@ -14,15 +14,15 @@ in backend repository
 - docker-compose up
 
 # Submodule installieren
-in BE:
-cd .\backend\backend\
-git submodule init
-git submodule update --remote
+in BE:<br>
+cd .\backend\backend\<br>
+git submodule init<br>
+git submodule update --remote<br>
 
-in FE 
-cd .\frontend\
-git submodule init
-git submodule update --remote
+in FE <br>
+cd .\frontend\<br>
+git submodule init<br>
+git submodule update --remote<br>
 
 # Docker start manuell
 - docker-compose up postgresdb
