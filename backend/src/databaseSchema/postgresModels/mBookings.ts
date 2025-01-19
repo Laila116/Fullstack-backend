@@ -1,6 +1,6 @@
 import { Model, DataTypes } from 'sequelize';
 import { sequelize } from '../../databaseConnection/postgres.js';
-import { iBookings } from '../../../../shared/interface/iBookings';
+import { iBookings } from '@shared/interface/iBookings';
 import Users from './mUser.js';
 import { ObjectId } from "mongoose";
 

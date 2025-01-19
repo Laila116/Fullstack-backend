@@ -4,7 +4,7 @@ import Users from "../databaseSchema/postgresModels/mUser";
 import Feedback from "../databaseSchema/mongoModels/mFeedback";  
 import EventCosts from "../databaseSchema/postgresModels/mEventCosts";
 import ErrorMessages from "./fehlerMeldung";
-import { iEventCosts } from "../../../shared/interface/iEventCosts";
+import { iEventCosts } from "@shared/interface/iEventCosts";
 
 export async function createEvent ( req: Request, res: Response, next: NextFunction): Promise<void> {
     try {

@@ -1,3 +1,6 @@
 [submodule "shared"]
 	path = shared
 	url = https://gitlab.ai.it.hs-worms.de/fullstack-webapplications-wise-2024/group-m/shared
+[submodule "backend/shared"]
+	path = backend/shared
+	url = https://gitlab.ai.it.hs-worms.de/fullstack-webapplications-wise-2024/group-m/shared

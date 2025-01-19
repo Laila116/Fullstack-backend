@@ -16,11 +16,11 @@ app.use("/api", router);
 app.use(errorHandler);
 
 app.get("/", (req, res) => {
-  res.send("Hello from the backend 1234!");
+  res.send("Backend ist Erreichbar!");
 });
 
 app.listen(PORT, () => {
-  console.log('Server is running on http://localhost:${PORT}');
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
 
 async function tryPostgresConnection() {
