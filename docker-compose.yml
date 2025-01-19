@@ -2,13 +2,9 @@ services:
   frontend:
     build: 
       context: ../frontend
-    #volumes:
-     # - ./shared:/app/shared
     ports:
       - "${PORT_FE}:${PORT_FE}"
-    #networks:
-     # - my_network 
-    #command: npm run start  
+    restart: always
   backend:
     build:
       context: ./backend
@@ -28,10 +24,7 @@ services:
     depends_on: # stellt sciher das die vor Backend-Container gestartet werden
       - postgres-db
       - mongo-db
-    #restart: always
-   # networks:
-    #  - my_network 
-  # PostgreSQL Database
+    restart: always
   postgres-db:
     image: postgres:15
     container_name: postgresdb
@@ -40,36 +33,18 @@ services:
       POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_DB: ${PG_NAME}
     ports:
-      #- "5432:5432"
       - "${PG_PORT}:${PG_PORT}"
-    #env_file:
-      #- .env  # Verweist auf die .env-Datei im selben Verzeichnis wie die docker-compose.yml
     volumes:
-      #- ./postgres/data:/var/lib/postgresql/data  # Persistente Speicherung der Daten
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
-    #networks:
-     # - my_network 
-  # MongoDB Database
   mongo-db:
     image: mongo:latest
     container_name: mongodb
     environment:
-      #MONGO_INITDB_DATABASE: mongo_eventdb
       MONGO_INITDB_DATABASE: ${MONGO_DB_NAME}
     ports:
-      #- "27017:27017"
       - "${MONGO_PORT}:${MONGO_PORT}"
-    #env_file:
-     # - .env  # Verweist auf die .env-Datei im selben Verzeichnis wie die docker-compose.yml
     volumes:
       - ./mongodb/mockData.js:/docker-entrypoint-initdb.d/mockData.js
-      #- ./mongodb:/data/db  # Persistente Speicherung der MongoDB-Daten
-   # networks:
-    #  - my_network 
-#networks:
- # my_network:
-  #  driver: bridge
-
 #volumes:
 #  postgres_data:  # Definiert das Docker-Volume für PostgreSQL-Daten
 #  mongo_data:     # Definiert das Docker-Volume für MongoDB-Daten
