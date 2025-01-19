@@ -13,6 +13,17 @@ Musa Albayrak 678975 <br>
 in backend repository
 - docker-compose up
 
+# Submodule installieren
+in BE:
+cd .\backend\backend\
+git submodule init
+git submodule update --remote
+
+in FE 
+cd .\frontend\
+git submodule init
+git submodule update --remote
+
 # Docker start manuell
 - docker-compose up postgresdb
 - docker-compose up mongodb
