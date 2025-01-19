@@ -5,9 +5,9 @@ Modul: 151-Fullstack
 
 von 
 
-Laila Almejbel 679162
-Zübeyde Dogan 679407
-Musa Albayrak 678975
+Laila Almejbel 679162 <br>
+Zübeyde Dogan 679407 <br>
+Musa Albayrak 678975 <br>
 
 # Docker
 - docker-compose up
@@ -19,9 +19,9 @@ Musa Albayrak 678975
 - docker-compose up backend-1
 
 # Test Frontend
-Component: BookingsService
-Framework: Angular mit Jasmine
-Testausführung:
+Component: BookingsService <br>
+Framework: Angular mit Jasmine <br>
+Testausführung:<br>
 ng test
 
 # Ergebnis
@@ -33,10 +33,10 @@ ng test
 npm run test
 
 # Login
-Testuser
-Email: user1@example.com
+Testuser <br>
+Email: user1@example.com <br>
 Passwort: password123
 
-Testveranstalter
-Email: veranstalter1@example.com
+Testveranstalter <br>
+Email: veranstalter1@example.com <br>
 Passwort: password123
