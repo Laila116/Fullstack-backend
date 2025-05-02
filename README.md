@@ -5,9 +5,9 @@ Modul: 151-Fullstack
 
 von 
 
-Laila Almejbel 679162 <br>
-Zübeyde Dogan 679407 <br>
-Musa Albayrak 678975 <br>
+Laila Almejbel  <br>
+Zübeyde Dogan  <br>
+Musa Albayrak  <br>
 
 # Docker
 in backend repository: <br>
